@@ -1,0 +1,3 @@
+#score span:before {
+  content: "Score: "
+}
