@@ -5,23 +5,34 @@ let scoreCount = 0
 let looping = false
 let highest = 0
 let characterImg
+let bulletImg
+let bgm
 
 // game configuration
-const FRAMES_EVERY_BULLET = 4
-const BULLET_MAX_SPEED = 7
-const BULLET_MIN_SPEED = 4
-const BULLET_WIDTH = 10
-const BULLET_HEIGHT = 5
+const FRAMES_EVERY_BULLET = 8
+const BULLET_MAX_SPEED = 6
+const BULLET_MIN_SPEED = 3
+const BULLET_WIDTH = 15
+const BULLET_HEIGHT = 10
+const BULLET_IMG_SRC = './bullet.png'
 const CHARACTER_WIDTH = 30
 const CHARACTER_HEIGHT = 30
 const CHARACTER_SPEED = 4
+const CHARACTER_IMG_SRC = './doge.jpg'
+const BGM_SRC = './yeshi.mp3'
+
+function preload() {
+  soundFormats('mp3');
+  bgm = loadSound('./yeshi.mp3');
+}
 
 // invoke one time to setup canvas
 function setup(){
   // global width, height!!
   createCanvas(600, 600).parent('game')
   background(51)  
-  characterImg = loadImage("./doge.jpg");
+  characterImg = loadImage(CHARACTER_IMG_SRC);
+  bulletImg = loadImage(BULLET_IMG_SRC)
   reset()
 }
 
@@ -30,6 +41,7 @@ function reset(){
   character = new Character()  
   scoreCount = 0
   looping = true
+  !bgm.isPlaying() && bgm.play()
   loop()
 }
 
@@ -64,6 +76,7 @@ function draw(){
         }
         setTimeout(function(){score.innerHTML += '  Press Space to play again~'},1000)
         looping = false
+        bgm.isPlaying() && bgm.stop()
         noLoop() // stop loop
       } 
     }
@@ -96,7 +109,8 @@ class Bullet{
   // draw bullet
   show(){
     fill(255)
-    rect(this.x, this.y, BULLET_WIDTH, BULLET_HEIGHT)
+    // rect(this.x, this.y, BULLET_WIDTH, BULLET_HEIGHT)
+    image(bulletImg, this.x, this.y, BULLET_WIDTH, BULLET_HEIGHT)
   }
 }
 
