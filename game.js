@@ -4,6 +4,7 @@ let score = document.querySelector("#score span")
 let scoreCount = 0
 let looping = false
 let highest = 0
+let characterImg
 
 // game configuration
 const FRAMES_EVERY_BULLET = 4
@@ -11,8 +12,8 @@ const BULLET_MAX_SPEED = 7
 const BULLET_MIN_SPEED = 4
 const BULLET_WIDTH = 10
 const BULLET_HEIGHT = 5
-const CHARACTER_WIDTH = 10
-const CHARACTER_HEIGHT = 10
+const CHARACTER_WIDTH = 30
+const CHARACTER_HEIGHT = 30
 const CHARACTER_SPEED = 4
 
 // invoke one time to setup canvas
@@ -20,6 +21,7 @@ function setup(){
   // global width, height!!
   createCanvas(600, 600).parent('game')
   background(51)  
+  characterImg = loadImage("./doge.jpg");
   reset()
 }
 
@@ -125,6 +127,7 @@ class Character{
   // draw character
   show(){
     fill(255)
-    rect(this.x,this.y,CHARACTER_WIDTH,CHARACTER_HEIGHT)
+    // rect(this.x,this.y,CHARACTER_WIDTH,CHARACTER_HEIGHT)
+    image(characterImg, this.x, this.y, CHARACTER_WIDTH, CHARACTER_HEIGHT);
   }
 }
