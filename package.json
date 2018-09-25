@@ -1,6 +1,13 @@
 {
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
   "dependencies": {
     "koa": "^2.5.3",
     "koa-static": "^5.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "1.18.4"
   }
 }

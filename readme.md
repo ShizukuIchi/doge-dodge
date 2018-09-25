@@ -1,4 +1,8 @@
+Doge Dodge
+===
 A bullet-dodge-game using P5.
 
-Just open index.html in a browser.
+## Usage
+1. Start server by `yarn start`
+2. Open browser and go to `localhost:3000`
 
