@@ -14,16 +14,16 @@ const BULLET_MAX_SPEED = 6
 const BULLET_MIN_SPEED = 3
 const BULLET_WIDTH = 15
 const BULLET_HEIGHT = 10
-const BULLET_IMG_SRC = './bullet.png'
+const BULLET_IMG_SRC = './assets/bullet.png'
 const CHARACTER_WIDTH = 30
 const CHARACTER_HEIGHT = 30
 const CHARACTER_SPEED = 4
-const CHARACTER_IMG_SRC = './doge.jpg'
-const BGM_SRC = './yeshi.mp3'
+const CHARACTER_IMG_SRC = './assets/doge.jpg'
+const BGM_SRC = './assets/yeshi.mp3'
 
 function preload() {
   soundFormats('mp3');
-  bgm = loadSound('./yeshi.mp3');
+  bgm = loadSound(BGM_SRC);
 }
 
 // invoke one time to setup canvas
