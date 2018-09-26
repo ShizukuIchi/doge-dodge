@@ -1,3 +1,11 @@
-#score span:before {
+#score:before {
   content: "Score: "
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.red {
+  color: red;
 }
