@@ -1,24 +1,26 @@
-let score = document.querySelector('#score');
-let highest = 0;
-let looping = false;
+let score;
+let highest;
+let looping;
 let bullets;
 let bulletImg;
-let bulletSpeedRate
+let bulletSpeedRate;
 let character;
 let characterImg;
-let scoreCount
+let scoreCount;
 let bgm;
-let framesPerBullet
+let framesEveryBullet;
+let bulletMaxSpeed;
+let bulletMinSpeed;
 
 // game configuration
-const INIT_BULLET_SPEED_RATE = 1
+const INIT_BULLET_SPEED_RATE = 1;
 const INIT_FRAMES_EVERY_BULLET = 15;
-const BULLET_MAX_SPEED = 6;
-const BULLET_MIN_SPEED = 4;
+const INIT_BULLET_MAX_SPEED = 6;
+const INIT_BULLET_MIN_SPEED = 4;
 const BULLET_WIDTH = 20;
 const BULLET_HEIGHT = 13;
 const BULLET_IMG_SRC = './assets/bullet.png';
-const COLLISION_BOUNDARY = 3 
+const COLLISION_BOUNDARY = 3;
 const CHARACTER_WIDTH = 30;
 const CHARACTER_HEIGHT = 30;
 const CHARACTER_SPEED = 4;
@@ -37,11 +39,14 @@ function setup() {
   background(51);
   characterImg = loadImage(CHARACTER_IMG_SRC);
   bulletImg = loadImage(BULLET_IMG_SRC);
-  bgm.loop()
+  looping = false;
+  score = document.querySelector('#score');
+  bgm.loop();
   if (!localStorage.getItem('highest')) {
-    localStorage.setItem('highest', 0)
+    highest = 0;
+    localStorage.setItem('highest', 0);
   } else {
-    highest = localStorage.getItem('highest')
+    highest = localStorage.getItem('highest');
   }
   reset();
 }
@@ -51,36 +56,37 @@ function reset() {
   character = new Character();
   scoreCount = 0;
   looping = true;
-  bulletSpeedRate = INIT_BULLET_SPEED_RATE
-  framesPerBullet = INIT_FRAMES_EVERY_BULLET
+  bulletSpeedRate = INIT_BULLET_SPEED_RATE;
+  framesEveryBullet = INIT_FRAMES_EVERY_BULLET;
+  bulletMaxSpeed = INIT_BULLET_MAX_SPEED;
+  bulletMinSpeed = INIT_BULLET_MIN_SPEED;
   loop();
 }
 
 // invoke every frame by loop function
 function draw() {
   if (looping) {
-    if(scoreCount !== 0) {
-      if(framesPerBullet && scoreCount % 400 ===0) {
-        console.log('more bullets')
-        framesPerBullet -= 1;
+    background(51);
+    if (scoreCount !== 0) {
+      if (framesEveryBullet && scoreCount % 400 === 0) {
+        console.log('more bullets');
+        framesEveryBullet -= 1;
       }
-      if(scoreCount % 1200 === 0) {
-        console.log('speed up')
-        bulletSpeedRate += 0.5
+      if (scoreCount % 1200 === 0) {
+        console.log('speed up');
+        bulletSpeedRate += 0.5;
       }
     }
-    background(51);
     character.update();
     character.show();
-
-    if (frameCount % FRAMES_EVERY_BULLET === 0) {
+    if (frameCount % framesEveryBullet === 0) {
       bullets.push(new Bullet());
     }
     scoreCount += 1;
     score.innerHTML = scoreCount;
     for (let i = 0; i < bullets.length; i++) {
       let bullet = bullets[i];
-      if (bullet.x + bullet.w < 0) {
+      if (bullet.x + bullet.w < 1) {
         bullets.splice(i, 1);
         i -= 1;
         continue;
@@ -119,19 +125,19 @@ function keyPressed() {
   }
 }
 function mouseClicked(e) {
-  if (e.target.className==="p5Canvas" && looping) {
+  if (e.target.className === 'p5Canvas' && looping) {
     character.yspeed = -character.yspeed;
   }
 }
 
 class Bullet {
   constructor() {
-    this.x = width;
-    this.y = random(height);
     this.w = BULLET_WIDTH;
     this.h = BULLET_HEIGHT;
-    this.xspeed = -random(BULLET_MAX_SPEED * bulletSpeedRate, BULLET_MIN_SPEED * bulletSpeedRate);
-    this.yspeed = 0
+    this.x = width;
+    this.y = random(this.h / 2, height - this.h / 2);
+    this.xspeed = -random(bulletMinSpeed, bulletMaxSpeed) * bulletSpeedRate;
+    this.yspeed = 0;
   }
   update() {
     this.x += this.xspeed;
