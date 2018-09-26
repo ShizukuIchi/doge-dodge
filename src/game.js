@@ -8,19 +8,22 @@ let character;
 let characterImg;
 let scoreCount
 let bgm;
+let framesPerBullet
 
 // game configuration
-const FRAMES_EVERY_BULLET = 8;
+const INIT_BULLET_SPEED_RATE = 1
+const INIT_FRAMES_EVERY_BULLET = 15;
 const BULLET_MAX_SPEED = 6;
-const BULLET_MIN_SPEED = 3;
-const BULLET_WIDTH = 15;
-const BULLET_HEIGHT = 10;
+const BULLET_MIN_SPEED = 4;
+const BULLET_WIDTH = 20;
+const BULLET_HEIGHT = 13;
 const BULLET_IMG_SRC = './assets/bullet.png';
+const COLLISION_BOUNDARY = 3 
 const CHARACTER_WIDTH = 30;
 const CHARACTER_HEIGHT = 30;
 const CHARACTER_SPEED = 4;
 const CHARACTER_IMG_SRC = './assets/doge.jpg';
-const BGM_SRC = './assets/yeshi.mp3';
+const BGM_SRC = './assets/yexi.mp3';
 
 function preload() {
   soundFormats('mp3');
@@ -30,10 +33,16 @@ function preload() {
 // invoke one time to setup canvas
 function setup() {
   // global width, height!!
-  createCanvas(600, 600).parent('game');
+  createCanvas(1000, 800).parent('game');
   background(51);
   characterImg = loadImage(CHARACTER_IMG_SRC);
   bulletImg = loadImage(BULLET_IMG_SRC);
+  bgm.loop()
+  if (!localStorage.getItem('highest')) {
+    localStorage.setItem('highest', 0)
+  } else {
+    highest = localStorage.getItem('highest')
+  }
   reset();
 }
 
@@ -42,15 +51,24 @@ function reset() {
   character = new Character();
   scoreCount = 0;
   looping = true;
-  bulletSpeedRate = 1
-  !bgm.isPlaying() && bgm.play();
+  bulletSpeedRate = INIT_BULLET_SPEED_RATE
+  framesPerBullet = INIT_FRAMES_EVERY_BULLET
   loop();
 }
 
 // invoke every frame by loop function
 function draw() {
   if (looping) {
-    bulletSpeedRate = 1 + scoreCount/800 
+    if(scoreCount !== 0) {
+      if(framesPerBullet && scoreCount % 400 ===0) {
+        console.log('more bullets')
+        framesPerBullet -= 1;
+      }
+      if(scoreCount % 1200 === 0) {
+        console.log('speed up')
+        bulletSpeedRate += 0.5
+      }
+    }
     background(51);
     character.update();
     character.show();
@@ -71,13 +89,14 @@ function draw() {
       bullet.show();
       // judging collision
       if (
-        bullet.x - character.x < character.w &&
-        character.x - bullet.x < bullet.w &&
-        bullet.y - character.y < character.h &&
-        character.y - bullet.y < bullet.h
+        bullet.x - character.x < character.w - COLLISION_BOUNDARY &&
+        character.x - bullet.x < bullet.w - COLLISION_BOUNDARY &&
+        bullet.y - character.y < character.h - COLLISION_BOUNDARY &&
+        character.y - bullet.y < bullet.h - COLLISION_BOUNDARY
       ) {
         if (highest < scoreCount) {
           highest = scoreCount;
+          localStorage.setItem('highest', highest);
           score.innerHTML += ` <span class="red bold">NEW BEST: ${highest}!!!</span>`;
         } else {
           score.innerHTML += ` BEST: <span class="bold">${highest}</span>`;
@@ -86,7 +105,6 @@ function draw() {
           score.innerHTML += ' Press Space to play again~';
         }, 1000);
         looping = false;
-        bgm.isPlaying() && bgm.stop();
         noLoop(); // stop loop
       }
     }
@@ -100,8 +118,8 @@ function keyPressed() {
     }
   }
 }
-function mouseClicked() {
-  if (looping) {
+function mouseClicked(e) {
+  if (e.target.className==="p5Canvas" && looping) {
     character.yspeed = -character.yspeed;
   }
 }

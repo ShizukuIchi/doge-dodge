@@ -1,3 +1,8 @@
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
 #score:before {
   content: "Score: "
 }
@@ -8,4 +13,61 @@
 
 .red {
   color: red;
+}
+
+#settings {
+  position: fixed;
+  height: 50px;
+  width: 50px;
+  right: 50px;
+  bottom: 50px;
+  background-color: beige;
+  border-radius: 50%;
+  border: none;
+  transition: all .1s;
+  box-shadow: 2px 2px 5px 0 rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#settings:active {
+  background-color: #efefd6;
+  transition: all .1s;
+  box-shadow: inset 1px 1px 2px 0 rgba(0,0,0,0.5), 0 0 1px 0 rgba(0,0,0,0.3);
+}
+#settings button {
+  background-color: transparent;
+  border: none;
+}
+#settings:active button {
+  transform: translate(1px,1px);
+}
+
+.menu {
+  visibility: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: all .2s;
+  background-color: transparent;
+}
+.menu-active {
+  opacity: 1;
+  transition: all .5s;
+  visibility: visible;
+  background-color: rgba(0,0,0,0.5);
+}
+.menu-container {
+  padding: 20px;
+  border-radius: 3px;
+  width: 400px;
+  height: 400px;
+  background-color: #FFF;
+  box-shadow: 0 0 30px 0 rgba(0,0,0,0.5);
 }
