@@ -8,28 +8,34 @@ let character;
 let characterImg;
 let scoreCount;
 let bgm;
+let addSpeedHint
 let framesEveryBullet;
 let bulletMaxSpeed;
 let bulletMinSpeed;
+let bulletSound
 
 // game configuration
 const INIT_BULLET_SPEED_RATE = 1;
-const INIT_FRAMES_EVERY_BULLET = 15;
+const INIT_FRAMES_EVERY_BULLET = 18;
 const INIT_BULLET_MAX_SPEED = 6;
 const INIT_BULLET_MIN_SPEED = 4;
 const BULLET_WIDTH = 20;
 const BULLET_HEIGHT = 13;
 const BULLET_IMG_SRC = './assets/bullet.png';
-const COLLISION_BOUNDARY = 3;
-const CHARACTER_WIDTH = 30;
-const CHARACTER_HEIGHT = 30;
+const COLLISION_BOUNDARY = 5;
+const CHARACTER_WIDTH = 35;
+const CHARACTER_HEIGHT = 35;
 const CHARACTER_SPEED = 4;
-const CHARACTER_IMG_SRC = './assets/doge.jpg';
+const CHARACTER_IMG_SRC = './assets/man.png';
 const BGM_SRC = './assets/yexi.mp3';
+const ADD_SPEED_MUSIC_SRC = './assets/wolf.mp3'
+const BULLET_SOUND_SRC = './assets/shoot.mp3'
 
 function preload() {
   soundFormats('mp3');
   bgm = loadSound(BGM_SRC);
+  addSpeedHint = loadSound(ADD_SPEED_MUSIC_SRC)
+  bulletSound = loadSound(BULLET_SOUND_SRC)
 }
 
 // invoke one time to setup canvas
@@ -68,12 +74,19 @@ function draw() {
   if (looping) {
     background(51);
     if (scoreCount !== 0) {
-      if (framesEveryBullet && scoreCount % 400 === 0) {
+      if (framesEveryBullet && scoreCount % 300 === 0) {
         console.log('more bullets');
         framesEveryBullet -= 1;
+        setTimeout(() => {
+          if (looping) {
+            bullets.push(new FatalBullet());
+          }
+        }, 100)
+        bulletSound.play()
       }
-      if (scoreCount % 1200 === 0) {
+      if (scoreCount % 1000 === 0) {
         console.log('speed up');
+        addSpeedHint.play()
         bulletSpeedRate += 0.5;
       }
     }
@@ -148,6 +161,31 @@ class Bullet {
   show() {
     fill(255);
     image(bulletImg, this.x, this.y, this.w, this.h);
+  }
+}
+
+class FatalBullet extends Bullet {
+  constructor() {
+    super()
+    this.w = BULLET_WIDTH + 10;
+    this.h = BULLET_HEIGHT + 10;
+    this.y = character ? character.y : random(this.h / 2, height - this.h / 2);
+    this.yspeed = character ? character.yspeed : 0
+  }
+
+  update() {
+    this.x += 2*this.xspeed;
+    this.y += this.yspeed;
+
+    // map boundary = 1
+    if (this.y + this.h > height - 1) {
+      this.y = height - 1 - this.h;
+      this.yspeed = -this.yspeed;
+    }
+    if (this.y < 1) {
+      this.y = 1;
+      this.yspeed = -this.yspeed;
+    }
   }
 }
 
