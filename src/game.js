@@ -6,6 +6,7 @@ let bulletImg;
 let bulletSpeedRate;
 let character;
 let characterImg;
+let characterSound;
 let scoreCount;
 let bgm;
 let addSpeedHint
@@ -27,6 +28,7 @@ const CHARACTER_WIDTH = 35;
 const CHARACTER_HEIGHT = 35;
 const CHARACTER_SPEED = 4;
 const CHARACTER_IMG_SRC = './assets/man.png';
+const CHARACTER_SOUND_SRC = './assets/dead.mp3'
 const BGM_SRC = './assets/yexi.mp3';
 const ADD_SPEED_MUSIC_SRC = './assets/wolf.mp3'
 const BULLET_SOUND_SRC = './assets/shoot.mp3'
@@ -36,6 +38,7 @@ function preload() {
   bgm = loadSound(BGM_SRC);
   addSpeedHint = loadSound(ADD_SPEED_MUSIC_SRC)
   bulletSound = loadSound(BULLET_SOUND_SRC)
+  characterSound = loadSound(CHARACTER_SOUND_SRC)
 }
 
 // invoke one time to setup canvas
@@ -123,6 +126,7 @@ function draw() {
         setTimeout(function() {
           score.innerHTML += ' Press Space to play again~';
         }, 1000);
+        characterSound.play()
         looping = false;
         noLoop(); // stop loop
       }
