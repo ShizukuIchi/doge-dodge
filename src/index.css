@@ -3,7 +3,7 @@ html, body {
   margin: 0;
 }
 
-#score:before {
+.score:before {
   content: "Score: "
 }
 
