@@ -4,7 +4,7 @@ html, body {
 }
 
 #score:before {
-  content: "Score: "
+  content: "分數: "
 }
 
 .bold {

@@ -1,6 +1,6 @@
 let score;
 let highest;
-let looping;
+let status;
 let bullets;
 let bulletImg;
 let bulletSpeedRate;
@@ -48,7 +48,7 @@ function setup() {
   background(51);
   characterImg = loadImage(CHARACTER_IMG_SRC);
   bulletImg = loadImage(BULLET_IMG_SRC);
-  looping = false;
+  status = 'stopped';
   score = document.querySelector('#score');
   bgm.loop();
   if (!localStorage.getItem('highest')) {
@@ -57,14 +57,17 @@ function setup() {
   } else {
     highest = localStorage.getItem('highest');
   }
-  reset();
+  fill(255)
+  textAlign(CENTER,CENTER)
+  textSize(80)
+  text('閃避（點擊）\n暫停（P）\n開始（空白鍵）',width*.5,height*.5)
 }
 
 function reset() {
   bullets = [];
   character = new Character();
   scoreCount = 0;
-  looping = true;
+  status = 'started'
   bulletSpeedRate = INIT_BULLET_SPEED_RATE;
   framesEveryBullet = INIT_FRAMES_EVERY_BULLET;
   bulletMaxSpeed = INIT_BULLET_MAX_SPEED;
@@ -72,16 +75,27 @@ function reset() {
   loop();
 }
 
+function pause() {
+  if( status === 'started'){
+    status = 'paused'
+    score.innerHTML += ' （暫停）'
+    noloop()
+  } else if (status === 'paused'){
+    status = 'started'
+    loop()
+  }
+}
+
 // invoke every frame by loop function
 function draw() {
-  if (looping) {
+  if (status === 'started') {
     background(51);
     if (scoreCount !== 0) {
       if (framesEveryBullet && scoreCount % 300 === 0) {
         console.log('more bullets');
         framesEveryBullet -= 1;
         setTimeout(() => {
-          if (looping) {
+          if (status === 'started') {
             bullets.push(new FatalBullet());
           }
         }, 100)
@@ -121,13 +135,13 @@ function draw() {
           localStorage.setItem('highest', highest);
           score.innerHTML += ` <span class="red bold">NEW BEST: ${highest}!!!</span>`;
         } else {
-          score.innerHTML += ` BEST: <span class="bold">${highest}</span>`;
+          score.innerHTML += ` 最高: <span class="bold">${highest}</span>`;
         }
         setTimeout(function() {
-          score.innerHTML += ' Press Space to play again~';
+          score.innerHTML += ' 鍵入空白再來一把';
         }, 1000);
         characterSound.play()
-        looping = false;
+        status = 'stopped'
         noLoop(); // stop loop
       }
     }
@@ -135,14 +149,19 @@ function draw() {
 }
 
 function keyPressed() {
-  if (key === ' ') {
-    if (!looping) {
-      reset();
-    }
+  switch(key) {
+    case ' ':
+      if(status ==='stopped'){
+        reset();
+      }
+      break
+    case 'p':
+      pause()
+      break
   }
 }
 function mouseClicked(e) {
-  if (e.target.className === 'p5Canvas' && looping) {
+  if (e.target.className === 'p5Canvas' && status === 'started') {
     character.yspeed = -character.yspeed;
   }
 }
