@@ -14,6 +14,7 @@ let framesEveryBullet;
 let bulletMaxSpeed;
 let bulletMinSpeed;
 let bulletSound
+let font
 
 // game configuration
 const INIT_BULLET_SPEED_RATE = 1;
@@ -32,10 +33,12 @@ const CHARACTER_SOUND_SRC = './assets/dead.mp3'
 const BGM_SRC = './assets/yexi.mp3';
 const ADD_SPEED_MUSIC_SRC = './assets/wolf.mp3'
 const BULLET_SOUND_SRC = './assets/shoot.mp3'
+const FONT_SRC = 'assets/NotoSansTC-Regular.otf'
 
 function preload() {
   soundFormats('mp3');
   bgm = loadSound(BGM_SRC);
+  font = loadFont(FONT_SRC);
   addSpeedHint = loadSound(ADD_SPEED_MUSIC_SRC)
   bulletSound = loadSound(BULLET_SOUND_SRC)
   characterSound = loadSound(CHARACTER_SOUND_SRC)
@@ -58,6 +61,7 @@ function setup() {
     highest = localStorage.getItem('highest');
   }
   fill(255)
+  textFont(font);
   textAlign(CENTER,CENTER)
   textSize(80)
   text('閃避（點擊）\n暫停（P）\n開始（空白鍵）',width*.5,height*.5)
@@ -79,10 +83,8 @@ function pause() {
   if( status === 'started'){
     status = 'paused'
     score.innerHTML += ' （暫停）'
-    noloop()
   } else if (status === 'paused'){
     status = 'started'
-    loop()
   }
 }
 
@@ -163,6 +165,15 @@ function keyPressed() {
 function mouseClicked(e) {
   if (e.target.className === 'p5Canvas' && status === 'started') {
     character.yspeed = -character.yspeed;
+  }
+}
+function touchStarted() {
+  if (screen.width >= 768)
+    return
+  if (status === 'started') {
+    character.yspeed = -character.yspeed;
+  } else {
+    reset()
   }
 }
 
