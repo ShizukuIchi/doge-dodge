@@ -142,6 +142,7 @@ function draw() {
         setTimeout(function() {
           score.innerHTML += ' 鍵入空白再來一把';
         }, 1000);
+        fetch(`${location.href}score?score=${scoreCount}`)
         characterSound.play()
         status = 'stopped'
         noLoop(); // stop loop
