@@ -5,6 +5,7 @@
   },
   "dependencies": {
     "koa": "^2.5.3",
+    "koa-compress": "^3.0.0",
     "koa-static": "^5.0.0"
   },
   "devDependencies": {
