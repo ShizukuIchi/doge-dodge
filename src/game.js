@@ -15,6 +15,7 @@ let bulletMaxSpeed;
 let bulletMinSpeed;
 let bulletSound;
 let font;
+let barrages;
 
 // game configuration
 const INIT_BULLET_SPEED_RATE = 1;
@@ -49,6 +50,7 @@ function setup() {
   // global width, height!!
   createCanvas(1000, 800).parent('game');
   background(51);
+  barrages = new Barrages();
   characterImg = loadImage(CHARACTER_IMG_SRC);
   bulletImg = loadImage(BULLET_IMG_SRC);
   status = 'stopped';
@@ -68,6 +70,7 @@ function setup() {
 }
 
 function reset() {
+  barrages.clear();
   bullets = [];
   character = new Character();
   scoreCount = 0;
@@ -108,14 +111,10 @@ function draw() {
         addSpeedHint.play();
         bulletSpeedRate += 0.5;
       }
-      // set plugin here
-      if (scoreCount % 500 === 0) {
-        oneHole();
-      }
-      if (scoreCount < 400) {
-        if (frameCount % framesEveryBullet === 0) {
-          bullets.push(new Bullet());
-        }
+      normal();
+      barrages.generate();
+      if (scoreCount === 300) {
+        barrages.add(oneHole, 50);
       }
     }
     character.update();
@@ -272,17 +271,37 @@ function isColliding(a, b, boundary) {
 
 class Barrages {
   constructor() {
-    this.fns = [];
+    this.barrages = [];
   }
-  addFn(fn) {
-    this.fns.push(fn);
+  add(fn, lastFor) {
+    const _this = this;
+    const id = setTimeout(function() {
+      _this.removeId(id);
+      console.log('should remove');
+    }, lastFor);
+    this.barrages.push(new Barrage(id, fn));
   }
-  removeFn(fn) {
-    this.fns = this.fns.reduce(_fn => _fn !== fn);
+  removeId(id) {
+    this.barrages = this.barrages.filter(b => b.id !== id);
+  }
+  removeBarrage(fn) {
+    this.barrages = this.barrages.filter(b => b.fn !== fn);
   }
   generate() {
-    for (let i = 0; i < this.fns.length; i += 1) {
-      this.fns[i]();
-    }
+    this.barrages.forEach(b => b.gen());
+  }
+  clear() {
+    this.barrages.forEach(b => clearTimeout(b.id));
+    this.barrages = [];
+  }
+}
+
+class Barrage {
+  constructor(id, fn) {
+    this.id = id;
+    this.fn = fn;
+  }
+  gen() {
+    this.fn();
   }
 }
