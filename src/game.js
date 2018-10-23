@@ -112,6 +112,9 @@ function draw() {
     if (scoreCount && scoreCount % 1000 === 0) {
       addSpeedHint.play();
     }
+    if ((scoreCount + 50) % 300 === 0) {
+      bulletSound.play();
+    }
     if (scoreCount === 1) {
       barrages.add(bigChase(300), -1);
       barrages.add(regular(INIT_FRAMES_EVERY_BULLET), 300);

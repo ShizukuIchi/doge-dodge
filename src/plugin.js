@@ -26,10 +26,7 @@ function regular(interval = INIT_FRAMES_EVERY_BULLET) {
 function bigChase(interval = 300) {
   return function() {
     if (scoreCount % interval === 0) {
-      setTimeout(() => {
-        bullets.add(new FatalBullet());
-      }, 100);
-      bulletSound.play();
+      bullets.add(new FatalBullet());
     }
   };
 }
