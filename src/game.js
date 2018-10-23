@@ -99,28 +99,8 @@ function draw() {
     barrages.generate();
     character.update();
     character.show();
-    // for (let i = 0; i < bullets.length; i++) {
-    //   let bullet = bullets[i];
-    //   if (bullet.x + bullet.w < 1) {
-    //     bullets.splice(i, 1);
-    //     i -= 1;
-    //     continue;
-    //   }
-    //   bullet.update();
-    //   bullet.show();
-    // judging collision
-    if (
-      // isColliding(bullet, character, COLLISION_BOUNDARY) &&
-      !bullets.next() &&
-      status === 'started'
-    ) {
-      if (highest < scoreCount) {
-        highest = scoreCount;
-        localStorage.setItem('highest', highest);
-        score.innerHTML += ` <span class="red bold">NEW BEST: ${highest}!!!</span>`;
-      } else {
-        score.innerHTML += ` 最高: <span class="bold">${highest}</span>`;
-      }
+    if (!bullets.next() && status === 'started') {
+      checkHighScore();
       setTimeout(function() {
         score.innerHTML += ' 鍵入空白再來一把';
       }, 1000);
@@ -129,28 +109,28 @@ function draw() {
       status = 'stopped';
       noLoop(); // stop loop
     }
-    if (scoreCount !== 0) {
-      if (framesEveryBullet && scoreCount % 300 === 0) {
-        console.log('more bullets');
-        framesEveryBullet -= 1;
-      }
-      if (scoreCount % 1000 === 0) {
-        console.log('speed up');
-        addSpeedHint.play();
-        bulletSpeedRate += 0.5;
-      }
-      if (scoreCount === 1) {
-        barrages.add(bigChase, -1);
-      }
-      if (scoreCount === 350) {
-        barrages.add(oneHole, scoreCount + 1);
-      }
-      if (scoreCount === 20) {
-        barrages.add(wave2(200), 300);
-      }
+    if (scoreCount && scoreCount % 1000 === 0) {
+      addSpeedHint.play();
+    }
+    if (scoreCount === 1) {
+      barrages.add(bigChase(300), -1);
+      barrages.add(regular(INIT_FRAMES_EVERY_BULLET), 300);
+    }
+    if (scoreCount === 350) {
+      barrages.add(wave(200), 2250);
     }
     scoreCount += 1;
     score.innerHTML = scoreCount;
+  }
+}
+
+function checkHighScore() {
+  if (highest < scoreCount) {
+    highest = scoreCount;
+    localStorage.setItem('highest', highest);
+    score.innerHTML += ` <span class="red bold">NEW BEST: ${highest}!!!</span>`;
+  } else {
+    score.innerHTML += ` 最高: <span class="bold">${highest}</span>`;
   }
 }
 
@@ -185,7 +165,7 @@ class Bullet {
     this.w = w || BULLET_WIDTH;
     this.h = h || BULLET_HEIGHT;
     this.x = x || width;
-    this.y = y || random(this.h / 2, height - this.h / 2);
+    this.y = y || height / 2;
     this.xspeed =
       xs || -random(bulletMinSpeed, bulletMaxSpeed) * bulletSpeedRate;
     this.yspeed = ys || 0;
