@@ -1,4 +1,3 @@
-let score;
 let highest;
 let status;
 let bullets;
@@ -55,7 +54,6 @@ function setup() {
   characterImg = loadImage(CHARACTER_IMG_SRC);
   bulletImg = loadImage(BULLET_IMG_SRC);
   status = 'stopped';
-  score = document.querySelector('#score');
   bgm.loop();
   if (!localStorage.getItem('highest')) {
     highest = 0;
@@ -68,6 +66,9 @@ function setup() {
   textAlign(CENTER, CENTER);
   textSize(80);
   text('閃避（點擊）\n暫停（P）\n開始（空白鍵）', width * 0.5, height * 0.5);
+  textAlign(LEFT, TOP);
+  textSize(20);
+  text('分數：0', 0, 0);
 }
 
 function reset() {
@@ -84,9 +85,12 @@ function reset() {
 }
 
 function pause() {
+  fill(255);
+  textSize(20);
+  textAlign(LEFT, TOP);
   if (status === 'started') {
     status = 'paused';
-    score.innerHTML += ' （暫停）';
+    text(`分數：${String(scoreCount).replace(/./g, ' ')}　（暫停）`, 0, 0);
   } else if (status === 'paused') {
     status = 'started';
   }
@@ -99,41 +103,56 @@ function draw() {
     barrages.generate();
     character.update();
     character.show();
+    wolfSound();
+    bigChaseSound();
+    addBarrages();
+    fill(255);
+    textSize(20);
+    textAlign(LEFT, TOP);
+    text(`分數：${scoreCount}`, 0, 0);
     if (!bullets.next() && status === 'started') {
       checkHighScore();
-      setTimeout(function() {
-        score.innerHTML += ' 鍵入空白再來一把';
-      }, 1000);
       fetch(`${location.href}score?score=${scoreCount}`);
       characterSound.play();
       status = 'stopped';
       noLoop(); // stop loop
     }
-    if (scoreCount && scoreCount % 1000 === 0) {
-      addSpeedHint.play();
-    }
-    if ((scoreCount + 50) % 300 === 0) {
-      bulletSound.play();
-    }
-    if (scoreCount === 1) {
-      barrages.add(bigChase(300), -1);
-      barrages.add(regular(INIT_FRAMES_EVERY_BULLET), 300);
-    }
-    if (scoreCount === 350) {
-      barrages.add(wave(200), 2250);
-    }
     scoreCount += 1;
-    score.innerHTML = scoreCount;
+  }
+}
+
+function addBarrages() {
+  if (scoreCount === 1) {
+    barrages.add(bigChase(300), -1);
+    barrages.add(regular(INIT_FRAMES_EVERY_BULLET), 300);
+  }
+  if (scoreCount === 350) {
+    barrages.add(wave(200), 2250);
+  }
+}
+
+function bigChaseSound() {
+  if ((scoreCount + 50) % 300 === 0) {
+    bulletSound.play();
+  }
+}
+
+function wolfSound() {
+  if (scoreCount && scoreCount % 1000 === 0) {
+    addSpeedHint.play();
   }
 }
 
 function checkHighScore() {
+  fill(255);
+  textSize(20);
+  textAlign(LEFT, TOP);
   if (highest < scoreCount) {
     highest = scoreCount;
     localStorage.setItem('highest', highest);
-    score.innerHTML += ` <span class="red bold">NEW BEST: ${highest}!!!</span>`;
+    text(`分數：${highest}　新高！`, 0, 0);
   } else {
-    score.innerHTML += ` 最高: <span class="bold">${highest}</span>`;
+    text(`分數：${scoreCount}　最高：${highest}`, 0, 0);
   }
 }
 
