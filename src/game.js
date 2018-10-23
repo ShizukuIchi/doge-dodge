@@ -51,6 +51,7 @@ function setup() {
   createCanvas(1000, 800).parent('game');
   background(51);
   barrages = new Barrages();
+  bullets = new Bullets();
   characterImg = loadImage(CHARACTER_IMG_SRC);
   bulletImg = loadImage(BULLET_IMG_SRC);
   status = 'stopped';
@@ -71,7 +72,7 @@ function setup() {
 
 function reset() {
   barrages.clear();
-  bullets = [];
+  bullets.clear();
   character = new Character();
   scoreCount = 0;
   status = 'started';
@@ -95,62 +96,61 @@ function pause() {
 function draw() {
   if (status === 'started') {
     background(51);
+    barrages.generate();
+    character.update();
+    character.show();
+    // for (let i = 0; i < bullets.length; i++) {
+    //   let bullet = bullets[i];
+    //   if (bullet.x + bullet.w < 1) {
+    //     bullets.splice(i, 1);
+    //     i -= 1;
+    //     continue;
+    //   }
+    //   bullet.update();
+    //   bullet.show();
+    // judging collision
+    if (
+      // isColliding(bullet, character, COLLISION_BOUNDARY) &&
+      !bullets.next() &&
+      status === 'started'
+    ) {
+      if (highest < scoreCount) {
+        highest = scoreCount;
+        localStorage.setItem('highest', highest);
+        score.innerHTML += ` <span class="red bold">NEW BEST: ${highest}!!!</span>`;
+      } else {
+        score.innerHTML += ` 最高: <span class="bold">${highest}</span>`;
+      }
+      setTimeout(function() {
+        score.innerHTML += ' 鍵入空白再來一把';
+      }, 1000);
+      fetch(`${location.href}score?score=${scoreCount}`);
+      characterSound.play();
+      status = 'stopped';
+      noLoop(); // stop loop
+    }
     if (scoreCount !== 0) {
       if (framesEveryBullet && scoreCount % 300 === 0) {
         console.log('more bullets');
         framesEveryBullet -= 1;
-        setTimeout(() => {
-          if (status === 'started') {
-            bullets.push(new FatalBullet());
-          }
-        }, 100);
-        bulletSound.play();
       }
       if (scoreCount % 1000 === 0) {
         console.log('speed up');
         addSpeedHint.play();
         bulletSpeedRate += 0.5;
       }
-      normal();
-      barrages.generate();
-      if (scoreCount === 300) {
-        barrages.add(oneHole, 50);
+      if (scoreCount === 1) {
+        barrages.add(bigChase, -1);
+      }
+      if (scoreCount === 350) {
+        barrages.add(oneHole, scoreCount + 1);
+      }
+      if (scoreCount === 20) {
+        barrages.add(wave2(200), 300);
       }
     }
-    character.update();
-    character.show();
     scoreCount += 1;
     score.innerHTML = scoreCount;
-    for (let i = 0; i < bullets.length; i++) {
-      let bullet = bullets[i];
-      if (bullet.x + bullet.w < 1) {
-        bullets.splice(i, 1);
-        i -= 1;
-        continue;
-      }
-      bullet.update();
-      bullet.show();
-      // judging collision
-      if (
-        isColliding(bullet, character, COLLISION_BOUNDARY) &&
-        status === 'started'
-      ) {
-        if (highest < scoreCount) {
-          highest = scoreCount;
-          localStorage.setItem('highest', highest);
-          score.innerHTML += ` <span class="red bold">NEW BEST: ${highest}!!!</span>`;
-        } else {
-          score.innerHTML += ` 最高: <span class="bold">${highest}</span>`;
-        }
-        setTimeout(function() {
-          score.innerHTML += ' 鍵入空白再來一把';
-        }, 1000);
-        fetch(`${location.href}score?score=${scoreCount}`);
-        characterSound.play();
-        status = 'stopped';
-        noLoop(); // stop loop
-      }
-    }
   }
 }
 
@@ -269,39 +269,57 @@ function isColliding(a, b, boundary) {
   );
 }
 
+class Bullets {
+  constructor() {
+    this.bullets = [];
+  }
+  add(bullet) {
+    this.bullets.push(bullet);
+  }
+  next() {
+    let collision = 0;
+    for (let i = 0; i < this.bullets.length; i++) {
+      let bullet = this.bullets[i];
+      if (bullet.x + bullet.w < 1) {
+        this.bullets.splice(i, 1);
+        i -= 1;
+        continue;
+      }
+      bullet.update();
+      bullet.show();
+      collision += isColliding(bullet, character, COLLISION_BOUNDARY) ? 1 : 0;
+    }
+    return collision === 0;
+  }
+  clear() {
+    this.bullets = [];
+  }
+}
+
 class Barrages {
   constructor() {
     this.barrages = [];
   }
-  add(fn, lastFor) {
-    const _this = this;
-    const id = setTimeout(function() {
-      _this.removeId(id);
-      console.log('should remove');
-    }, lastFor);
-    this.barrages.push(new Barrage(id, fn));
-  }
-  removeId(id) {
-    this.barrages = this.barrages.filter(b => b.id !== id);
+  add(fn, tillScore) {
+    this.barrages.push(new Barrage(fn, tillScore));
   }
   removeBarrage(fn) {
     this.barrages = this.barrages.filter(b => b.fn !== fn);
   }
   generate() {
-    this.barrages.forEach(b => b.gen());
+    this.barrages = this.barrages.filter(b => {
+      b.fn();
+      return b.stopScore !== scoreCount;
+    });
   }
   clear() {
-    this.barrages.forEach(b => clearTimeout(b.id));
     this.barrages = [];
   }
 }
 
 class Barrage {
-  constructor(id, fn) {
-    this.id = id;
+  constructor(fn, stopScore) {
     this.fn = fn;
-  }
-  gen() {
-    this.fn();
+    this.stopScore = stopScore;
   }
 }
