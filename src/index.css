@@ -3,6 +3,9 @@ body {
   padding: 0;
   margin: 0;
   background: url(../assets/forest.jpeg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
 }
 .game-container {
   display: flex;
@@ -10,6 +13,15 @@ body {
   align-items: center;
   justify-content: center;
   height: 100%;
+}
+#game:before {
+  content: "loading...";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: #FFF;
+  font-size: 50px;
+  transform: translate(-50%, -50%);
 }
 #score {
   font-size: 20px;
@@ -28,6 +40,10 @@ body {
   animation: fade-in 1s;
   animation-fill-mode: forwards;
   opacity: 0;
+}
+
+#p5_loading {
+  display: none;
 }
 
 #game {
