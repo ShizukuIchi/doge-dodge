@@ -30,7 +30,7 @@ function bigChase(interval = 300) {
     }
   };
 }
-function wave(h = 150, s = INIT_BULLET_MIN_SPEED, cycle = 10, slope = 30) {
+function wave(h = 175, s = INIT_BULLET_MIN_SPEED, cycle = 10, slope = 30) {
   let waveCenter = random(
     BULLET_HEIGHT / 2 + h / 2 + (cycle / 2) * slope,
     height - BULLET_HEIGHT / 2 - h / 2 - (cycle / 2) * slope,
@@ -41,7 +41,7 @@ function wave(h = 150, s = INIT_BULLET_MIN_SPEED, cycle = 10, slope = 30) {
     if (yOffset < 0) yOffset = -yOffset;
     if (scoreCount % cycle === 0) {
       if (firstShot) {
-        oneHole(h, s, waveCenter + slope * yOffset)();
+        oneHole(h, s, waveCenter + slope * yOffset - BULLET_HEIGHT)();
         firstShot = false;
       } else {
         bullets.add(
@@ -66,5 +66,11 @@ function wave(h = 150, s = INIT_BULLET_MIN_SPEED, cycle = 10, slope = 30) {
         );
       }
     }
+  };
+}
+
+function stopper(stopFor = 150) {
+  return function() {
+    bullets.add(new BulletR(stopFor));
   };
 }

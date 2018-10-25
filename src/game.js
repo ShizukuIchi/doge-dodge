@@ -2,6 +2,10 @@ let highest;
 let status;
 let bullets;
 let bulletImg;
+let bulletRImg;
+let bulletBImg;
+let bulletGImg;
+let bulletPImg;
 let bulletSpeedRate;
 let character;
 let characterImg;
@@ -15,6 +19,7 @@ let bulletMinSpeed;
 let bulletSound;
 let font;
 let barrages;
+let plugins;
 
 // game configuration
 const INIT_BULLET_SPEED_RATE = 1;
@@ -23,7 +28,11 @@ const INIT_BULLET_MAX_SPEED = 6;
 const INIT_BULLET_MIN_SPEED = 4;
 const BULLET_WIDTH = 20;
 const BULLET_HEIGHT = 13;
-const BULLET_IMG_SRC = './assets/bullet.png';
+const BULLET_SRC = './assets/bullet.png';
+const BULLET_B_SRC = './assets/bullet-b.png';
+const BULLET_P_SRC = './assets/bullet-p.png';
+const BULLET_R_SRC = './assets/bullet-r.png';
+const BULLET_G_SRC = './assets/bullet-g.png';
 const COLLISION_BOUNDARY = 5;
 const CHARACTER_WIDTH = 35;
 const CHARACTER_HEIGHT = 35;
@@ -52,7 +61,29 @@ function setup() {
   barrages = new Barrages();
   bullets = new Bullets();
   characterImg = loadImage(CHARACTER_IMG_SRC);
-  bulletImg = loadImage(BULLET_IMG_SRC);
+  bulletImg = loadImage(BULLET_SRC);
+  bulletRImg = loadImage(BULLET_R_SRC);
+  bulletBImg = loadImage(BULLET_B_SRC);
+  bulletGImg = loadImage(BULLET_G_SRC);
+  bulletPImg = loadImage(BULLET_P_SRC);
+  plugins = [
+    {
+      fn: oneHole,
+      arguments: [],
+      stopTill: [1],
+    },
+    {
+      fn: wave,
+      arguments: [150, 175, 200],
+      stopTill: [100, 200, 300],
+    },
+    {
+      fn: stopper,
+      arguments: [100, 125, 150, 175],
+      stopTill: [1, 2, 3, 4],
+    },
+  ];
+
   status = 'stopped';
   bgm.loop();
   if (!localStorage.getItem('highest')) {
@@ -124,10 +155,16 @@ function draw() {
 function addBarrages() {
   if (scoreCount === 1) {
     barrages.add(bigChase(300), -1);
-    barrages.add(regular(INIT_FRAMES_EVERY_BULLET), 300);
+    barrages.add(regular(INIT_FRAMES_EVERY_BULLET), 450);
   }
-  if (scoreCount === 350) {
-    barrages.add(wave(200), 2250);
+  if ((scoreCount - 250) % 500 === 0) {
+    barrages.add(regular(INIT_FRAMES_EVERY_BULLET), scoreCount + 250);
+  }
+  if (scoreCount && scoreCount % 500 === 0) {
+    let barrage = plugins[floor(random(0, plugins.length))];
+    let arg = barrage.arguments[floor(random(0, barrage.arguments.length))];
+    let stopTill = barrage.stopTill[floor(random(0, barrage.stopTill.length))];
+    barrages.add(barrage.fn(arg), scoreCount + stopTill);
   }
 }
 
@@ -182,53 +219,6 @@ function touchStarted() {
   }
 }
 
-class Bullet {
-  constructor(x, y, w, h, xs, ys) {
-    this.w = w || BULLET_WIDTH;
-    this.h = h || BULLET_HEIGHT;
-    this.x = x || width;
-    this.y = y || height / 2;
-    this.xspeed =
-      xs || -random(bulletMinSpeed, bulletMaxSpeed) * bulletSpeedRate;
-    this.yspeed = ys || 0;
-  }
-  update() {
-    this.x += this.xspeed;
-    this.y += this.yspeed;
-  }
-
-  // draw bullet
-  show() {
-    fill(255);
-    image(bulletImg, this.x, this.y, this.w, this.h);
-  }
-}
-
-class FatalBullet extends Bullet {
-  constructor() {
-    super();
-    this.w = BULLET_WIDTH + 10;
-    this.h = BULLET_HEIGHT + 10;
-    this.y = character ? character.y : random(this.h / 2, height - this.h / 2);
-    this.yspeed = character ? character.yspeed : 0;
-  }
-
-  update() {
-    this.x += 2 * this.xspeed;
-    this.y += this.yspeed;
-
-    // map boundary = 1
-    if (this.y + this.h > height - 1) {
-      this.y = height - 1 - this.h;
-      this.yspeed = -this.yspeed;
-    }
-    if (this.y < 1) {
-      this.y = 1;
-      this.yspeed = -this.yspeed;
-    }
-  }
-}
-
 class Character {
   constructor() {
     // start position
@@ -269,33 +259,6 @@ function isColliding(a, b, boundary) {
     a.y - b.y < b.h - boundary &&
     b.y - a.y < a.h - boundary
   );
-}
-
-class Bullets {
-  constructor() {
-    this.bullets = [];
-  }
-  add(bullet) {
-    this.bullets.push(bullet);
-  }
-  next() {
-    let collision = 0;
-    for (let i = 0; i < this.bullets.length; i++) {
-      let bullet = this.bullets[i];
-      if (bullet.x + bullet.w < 1) {
-        this.bullets.splice(i, 1);
-        i -= 1;
-        continue;
-      }
-      bullet.update();
-      bullet.show();
-      collision += isColliding(bullet, character, COLLISION_BOUNDARY) ? 1 : 0;
-    }
-    return collision === 0;
-  }
-  clear() {
-    this.bullets = [];
-  }
 }
 
 class Barrages {
