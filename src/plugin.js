@@ -9,18 +9,16 @@ function oneHole(h = 150, s = INIT_BULLET_MIN_SPEED, center) {
   };
 }
 function regular(interval = INIT_FRAMES_EVERY_BULLET) {
-  return function() {
-    if (scoreCount % interval === 0) {
-      bullets.add(
-        new Bullet(
-          width,
-          random(BULLET_HEIGHT / 2, height - BULLET_HEIGHT / 2),
-          BULLET_WIDTH,
-          BULLET_HEIGHT,
-        ),
-      );
-    }
-  };
+  if (scoreCount % interval === 0) {
+    bullets.add(
+      new Bullet(
+        width,
+        random(BULLET_HEIGHT / 2, height - BULLET_HEIGHT / 2),
+        BULLET_WIDTH,
+        BULLET_HEIGHT,
+      ),
+    );
+  }
 }
 
 function bigChase(interval = 300) {

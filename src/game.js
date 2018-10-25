@@ -155,11 +155,11 @@ function draw() {
 function addBarrages() {
   if (scoreCount === 1) {
     barrages.add(bigChase(300), -1);
-    barrages.add(regular(INIT_FRAMES_EVERY_BULLET), 450);
+    barrages.add(regular, -1);
   }
-  if ((scoreCount - 250) % 500 === 0) {
-    barrages.add(regular(INIT_FRAMES_EVERY_BULLET), scoreCount + 250);
-  }
+  // if ((scoreCount - 250) % 500 === 0) {
+  //   barrages.add(regular(INIT_FRAMES_EVERY_BULLET), scoreCount + 250);
+  // }
   if (scoreCount && scoreCount % 500 === 0) {
     let barrage = plugins[floor(random(0, plugins.length))];
     let arg = barrage.arguments[floor(random(0, barrage.arguments.length))];
@@ -267,13 +267,18 @@ class Barrages {
   }
   add(fn, tillScore) {
     this.barrages.push(new Barrage(fn, tillScore));
+    listeners.emitEvent({ type: 'add', barrage: fn, till: tillScore });
   }
   removeBarrage(fn) {
+    listeners.emitEvent({ type: 'remove', barrage: fn });
     this.barrages = this.barrages.filter(b => b.fn !== fn);
   }
   generate() {
     this.barrages = this.barrages.filter(b => {
       b.fn();
+      if (b.stopScore === scoreCount) {
+        listeners.emitEvent({ type: 'remove', barrage: b.fn });
+      }
       return b.stopScore !== scoreCount;
     });
   }
