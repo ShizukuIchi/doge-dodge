@@ -31,8 +31,7 @@ class Bullet {
     this.h = h || BULLET_HEIGHT;
     this.x = x || width;
     this.y = y || height / 2;
-    this.xspeed =
-      xs || -random(bulletMinSpeed, bulletMaxSpeed) * bulletSpeedRate;
+    this.xspeed = xs || -INIT_BULLET_MIN_SPEED * bulletSpeedRate;
     this.yspeed = ys || 0;
   }
   update() {

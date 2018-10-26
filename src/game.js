@@ -68,17 +68,17 @@ function setup() {
   bulletPImg = loadImage(BULLET_P_SRC);
   plugins = [
     {
-      fn: oneHole,
-      arguments: [],
+      fn: genOneHole,
+      arguments: [200],
       stopTill: [1],
     },
     {
-      fn: wave,
-      arguments: [150, 175, 200],
+      fn: genWave,
+      arguments: [175, 200],
       stopTill: [100, 200, 300],
     },
     {
-      fn: stopper,
+      fn: genStopper,
       arguments: [100, 125, 150, 175],
       stopTill: [1, 2, 3, 4],
     },
@@ -154,17 +154,20 @@ function draw() {
 
 function addBarrages() {
   if (scoreCount === 1) {
-    barrages.add(bigChase(300), -1);
+    barrages.add(genBigChase(300), -1);
     barrages.add(regular, -1);
   }
-  // if ((scoreCount - 250) % 500 === 0) {
-  //   barrages.add(regular(INIT_FRAMES_EVERY_BULLET), scoreCount + 250);
-  // }
-  if (scoreCount && scoreCount % 500 === 0) {
+  if (scoreCount && scoreCount % 300 === 0) {
+    // let barrage = plugins[0];
     let barrage = plugins[floor(random(0, plugins.length))];
     let arg = barrage.arguments[floor(random(0, barrage.arguments.length))];
     let stopTill = barrage.stopTill[floor(random(0, barrage.stopTill.length))];
-    barrages.add(barrage.fn(arg), scoreCount + stopTill);
+    // barrages.add(barrage.fn(arg), scoreCount + stopTill);
+    listeners.emitEvent({
+      type: 'add',
+      barrage: barrage.fn(arg),
+      till: scoreCount + stopTill,
+    });
   }
 }
 
@@ -267,20 +270,32 @@ class Barrages {
   }
   add(fn, tillScore) {
     this.barrages.push(new Barrage(fn, tillScore));
-    listeners.emitEvent({ type: 'add', barrage: fn, till: tillScore });
+    console.log(fn.name, 'added');
+    // listeners.emitEvent({ type: 'add', barrage: fn, till: tillScore });
   }
-  removeBarrage(fn) {
-    listeners.emitEvent({ type: 'remove', barrage: fn });
-    this.barrages = this.barrages.filter(b => b.fn !== fn);
+  remove(fn) {
+    this.barrages = this.barrages.filter(b => {
+      let name = b.fn.name;
+      name = name.startsWith('bound ') ? name.split(' ')[1] : name;
+      let _name = fn.name;
+      _name = _name.startsWith('bound ') ? _name.split(' ')[1] : _name;
+      if (name === _name) {
+        console.log(_name, 'removed');
+      }
+      return name !== _name;
+    });
   }
   generate() {
-    this.barrages = this.barrages.filter(b => {
-      b.fn();
-      if (b.stopScore === scoreCount) {
-        listeners.emitEvent({ type: 'remove', barrage: b.fn });
-      }
-      return b.stopScore !== scoreCount;
-    });
+    this.barrages
+      .filter(b => {
+        // b.fn();
+        if (b.stopScore > 0 && b.stopScore + 1 <= scoreCount) {
+          listeners.emitEvent({ type: 'remove', barrage: b.fn });
+          return false;
+        }
+        return true;
+      })
+      .forEach(b => b.fn());
   }
   clear() {
     this.barrages = [];

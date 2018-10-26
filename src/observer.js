@@ -1,5 +1,13 @@
 const { Observable, of, empty, interval } = rxjs;
-const { mapTo, filter, delay, endWith, mergeMap, takeUntil } = rxjs.operators;
+const {
+  mapTo,
+  map,
+  filter,
+  delay,
+  endWith,
+  mergeMap,
+  takeUntil,
+} = rxjs.operators;
 
 function RxFromListeners(listeners) {
   return Observable.create(observer => {
@@ -24,27 +32,39 @@ const listeners = new Listeners();
 const $event = RxFromListeners(listeners);
 
 $event.subscribe(handler);
-addBarrageEpic($event).subscribe(handler);
-removeBarrageEpic($event).subscribe(handler);
+addLongBarrageEpic($event).subscribe(handler);
+removeShortBarrageEpic($event).subscribe(handler);
+removeLongBarrageEpic($event).subscribe(handler);
 
-function addBarrageEpic($event) {
+function addLongBarrageEpic($event) {
   return $event.pipe(
-    filter(evt => evt.type === 'add' && evt.barrage !== regular),
+    ofType('add'),
+    ofBarrage('wave', 'oneHole'),
     mapTo({ type: 'remove', barrage: regular }),
   );
 }
-function removeBarrageEpic($event) {
+function removeShortBarrageEpic($event) {
   return $event.pipe(
-    filter(evt => evt.type === 'remove' && evt.barrage !== regular),
-    mapTo({ type: 'add', barrage: regular }),
+    ofType('remove'),
+    ofBarrage('oneHole'),
+    mapTo({ type: 'add', barrage: regular, till: -1 }),
+    delay(500),
+  );
+}
+function removeLongBarrageEpic($event) {
+  return $event.pipe(
+    ofType('remove'),
+    ofBarrage('wave'),
+    mapTo({ type: 'add', barrage: regular, till: -1 }),
+    delay(500),
   );
 }
 
 function addHandler(evt) {
-  console.log('add', evt.barrage);
+  barrages.add(evt.barrage, evt.till);
 }
 function removeHandler(evt) {
-  console.log('remove', evt.barrage);
+  barrages.remove(evt.barrage);
 }
 
 function handler(evt) {
@@ -57,3 +77,36 @@ function handler(evt) {
       console.log(evt);
   }
 }
+
+function ofType(...types) {
+  return filter(evt => types.includes(evt.type));
+}
+function notOfBarrage(name) {
+  return filter(evt => evt.barrage.name !== name);
+}
+function ofBarrage(...names) {
+  return filter(evt => {
+    let name = evt.barrage.name;
+    name = name.startsWith('bound ') ? name.split(' ')[1] : name;
+    return names.includes(name);
+  });
+}
+// ─────────▄──────────────▄
+// ────────▌▒█───────────▄▀▒▌
+// ────────▌▒▒▀▄───────▄▀▒▒▒▐
+// ───────▐▄▀▒▒▀▀▀▀▄▄▄▀▒▒▒▒▒▐
+// ─────▄▄▀▒▒▒▒▒▒▒▒▒▒▒█▒▒▄█▒▐
+// ───▄▀▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▀██▀▒▌
+// ──▐▒▒▒▄▄▄▒▒▒▒▒▒▒▒▒▒▒▒▒▀▄▒▒▌
+// ──▌▒▒▐▄█▀▒▒▒▒▄▀█▄▒▒▒▒▒▒▒█▒▐
+// ─▐▒▒▒▒▒▒▒▒▒▒▒▌██▀▒▒▒▒▒▒▒▒▀▄▌
+// ─▌▒▀▄██▄▒▒▒▒▒▒▒▒▒▒▒░░░░▒▒▒▒▌
+// ─▌▀▐▄█▄█▌▄▒▀▒▒▒▒▒▒░░░░░░▒▒▒▐
+// ▐▒▀▐▀▐▀▒▒▄▄▒▄▒▒▒▒▒░░░░░░▒▒▒▒▌
+// ▐▒▒▒▀▀▄▄▒▒▒▄▒▒▒▒▒▒░░░░░░▒▒▒▐
+// ─▌▒▒▒▒▒▒▀▀▀▒▒▒▒▒▒▒▒░░░░▒▒▒▒▌
+// ─▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▐
+// ──▀▄▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▄▒▒▒▒▌
+// ────▀▄▒▒▒▒▒▒▒▒▒▒▄▄▄▀▒▒▒▒▄▀
+// ───▐▀▒▀▄▄▄▄▄▄▀▀▀▒▒▒▒▒▄▄▀
+// ──▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▀▀
