@@ -24,13 +24,12 @@ function regular(i = INIT_FRAMES_EVERY_BULLET) {
   }
 }
 
-function genBigChase(i = 300) {
-  return bigChase.bind(this, i);
+function genBigChase(rate = 1.5) {
+  return bigChase.bind(null, rate);
 }
-function bigChase(interval) {
-  if (scoreCount % interval === 0) {
-    bullets.add(new FatalBullet());
-  }
+function bigChase(rate) {
+  bulletSound.play();
+  bullets.add(new FatalBullet(rate));
 }
 
 function genWave(h = 175, s = INIT_BULLET_MIN_SPEED, cycle = 10, slope = 30) {
@@ -77,5 +76,40 @@ function genStopper(t) {
 }
 
 function stopper(till) {
-  bullets.add(new BulletR(till));
+  bullets.add(new Stopper(till));
+}
+
+function genVanisher() {
+  return vanisher;
+}
+function vanisher() {
+  bullets.add(new Vanisher());
+}
+
+function genRandomer() {
+  return randomer;
+}
+function randomer() {
+  bullets.add(new Randomer());
+}
+
+function genAccelerator(a) {
+  return accelerator.bind(null, a);
+}
+function accelerator(a) {
+  bullets.add(new Accelerator(a));
+}
+
+function genPlumber() {
+  return plumber;
+}
+function plumber() {
+  bullets.add(new Plumber());
+}
+
+function genCrosser() {
+  return crosser;
+}
+function crosser() {
+  bullets.add(new Crosser());
 }

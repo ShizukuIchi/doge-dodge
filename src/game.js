@@ -20,6 +20,8 @@ let bulletSound;
 let font;
 let barrages;
 let plugins;
+let game;
+let map;
 
 // game configuration
 const INIT_BULLET_SPEED_RATE = 1;
@@ -57,6 +59,8 @@ function preload() {
 function setup() {
   // global width, height!!
   createCanvas(1000, 800).parent('game');
+  game = document.querySelector('#game');
+  game.style.opacity = '100';
   background(51);
   barrages = new Barrages();
   bullets = new Bullets();
@@ -69,21 +73,51 @@ function setup() {
   plugins = [
     {
       fn: genOneHole,
-      arguments: [200],
+      arguments: [190, 180, 170, 160],
       stopTill: [1],
     },
     {
       fn: genWave,
-      arguments: [175, 200],
-      stopTill: [100, 200, 300],
+      arguments: [200, 195, 190, 185, 180],
+      stopTill: [150, 175, 200, 225],
     },
     {
       fn: genStopper,
       arguments: [100, 125, 150, 175],
-      stopTill: [1, 2, 3, 4],
+      stopTill: [3, 4],
+    },
+    {
+      fn: genBigChase,
+      arguments: [2.5, 2.7, 2.9],
+      stopTill: [1],
+    },
+    {
+      fn: genVanisher,
+      arguments: [0],
+      stopTill: [5, 6, 7],
+    },
+    {
+      fn: genAccelerator,
+      arguments: [1, 1, 1, -2],
+      stopTill: [5, 6, 7],
+    },
+    {
+      fn: genRandomer,
+      arguments: [0],
+      stopTill: [5, 6, 7],
+    },
+    {
+      fn: genPlumber,
+      arguments: [0],
+      stopTill: [1],
+    },
+    {
+      fn: genCrosser,
+      arguments: [0],
+      stopTill: [6],
     },
   ];
-
+  mapPlugins = ['turnX', 'turnY', 'turnZ1', 'turnZ2', 'turnZ3'];
   status = 'stopped';
   bgm.loop();
   if (!localStorage.getItem('highest')) {
@@ -100,9 +134,12 @@ function setup() {
   textAlign(LEFT, TOP);
   textSize(20);
   text('分數：0', 0, 0);
+  map = mapChanger(1000);
 }
 
 function reset() {
+  game.style.animation = '';
+  map = mapChanger(1000);
   barrages.clear();
   bullets.clear();
   character = new Character();
@@ -135,12 +172,12 @@ function draw() {
     character.update();
     character.show();
     wolfSound();
-    bigChaseSound();
     addBarrages();
     fill(255);
     textSize(20);
     textAlign(LEFT, TOP);
     text(`分數：${scoreCount}`, 0, 0);
+    map();
     if (!bullets.next() && status === 'started') {
       checkHighScore();
       fetch(`${location.href}score?score=${scoreCount}`);
@@ -154,15 +191,12 @@ function draw() {
 
 function addBarrages() {
   if (scoreCount === 1) {
-    barrages.add(genBigChase(300), -1);
     barrages.add(regular, -1);
   }
   if (scoreCount && scoreCount % 300 === 0) {
-    // let barrage = plugins[0];
     let barrage = plugins[floor(random(0, plugins.length))];
     let arg = barrage.arguments[floor(random(0, barrage.arguments.length))];
     let stopTill = barrage.stopTill[floor(random(0, barrage.stopTill.length))];
-    // barrages.add(barrage.fn(arg), scoreCount + stopTill);
     listeners.emitEvent({
       type: 'add',
       barrage: barrage.fn(arg),
@@ -170,11 +204,23 @@ function addBarrages() {
     });
   }
 }
-
-function bigChaseSound() {
-  if ((scoreCount + 50) % 300 === 0) {
-    bulletSound.play();
-  }
+function mapChanger(interval) {
+  let mapPlugin = '';
+  let reverseScore = -1;
+  return function() {
+    if (scoreCount && scoreCount % interval === 0) {
+      reverseScore = scoreCount + 300;
+      mapPlugin = mapPlugins[floor(random(0, mapPlugins.length))];
+      changeMap(mapPlugin);
+    }
+    if (reverseScore === scoreCount) {
+      changeMap(mapPlugin + '-r');
+      mapPlugin = '';
+    }
+  };
+}
+function changeMap(plugin) {
+  game.style.animation = plugin + ' 1s forwards';
 }
 
 function wolfSound() {
@@ -270,8 +316,6 @@ class Barrages {
   }
   add(fn, tillScore) {
     this.barrages.push(new Barrage(fn, tillScore));
-    console.log(fn.name, 'added');
-    // listeners.emitEvent({ type: 'add', barrage: fn, till: tillScore });
   }
   remove(fn) {
     this.barrages = this.barrages.filter(b => {
@@ -279,9 +323,6 @@ class Barrages {
       name = name.startsWith('bound ') ? name.split(' ')[1] : name;
       let _name = fn.name;
       _name = _name.startsWith('bound ') ? _name.split(' ')[1] : _name;
-      if (name === _name) {
-        console.log(_name, 'removed');
-      }
       return name !== _name;
     });
   }

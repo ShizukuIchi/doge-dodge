@@ -1,13 +1,5 @@
-const { Observable, of, empty, interval } = rxjs;
-const {
-  mapTo,
-  map,
-  filter,
-  delay,
-  endWith,
-  mergeMap,
-  takeUntil,
-} = rxjs.operators;
+const { Observable } = rxjs;
+const { mapTo, filter, delay } = rxjs.operators;
 
 function RxFromListeners(listeners) {
   return Observable.create(observer => {
@@ -74,7 +66,7 @@ function handler(evt) {
     case 'remove':
       return removeHandler(evt);
     default:
-      console.log(evt);
+    // console.log(evt);
   }
 }
 

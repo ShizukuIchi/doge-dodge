@@ -14,6 +14,7 @@ body {
   justify-content: center;
   height: 100%;
 }
+
 #game:before {
   content: "loading...";
   position: absolute;
@@ -124,4 +125,85 @@ body {
   height: 400px;
   background-color: #fff;
   box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.5);
+}
+
+@keyframes turnZ1 {
+  from {
+    transform: rotateZ(0deg);
+  }
+  to {
+    transform: rotateZ(90deg);
+  }
+}
+@keyframes turnZ1-r {
+  from {
+    transform: rotateZ(90deg);
+  }
+  to {
+    transform: rotateZ(0deg);
+  }
+}
+@keyframes turnZ2 {
+  from {
+    transform: rotateZ(0deg);
+  }
+  to {
+    transform: rotateZ(180deg);
+  }
+}
+@keyframes turnZ2-r {
+  from {
+    transform: rotateZ(180deg);
+  }
+  to {
+    transform: rotateZ(0deg);
+  }
+}
+@keyframes turnZ3 {
+  from {
+    transform: rotateZ(0deg);
+  }
+  to {
+    transform: rotateZ(-90deg);
+  }
+}
+@keyframes turnZ3-r {
+  from {
+    transform: rotateZ(-90deg);
+  }
+  to {
+    transform: rotateZ(0deg);
+  }
+}
+@keyframes turnX {
+  from {
+    transform: rotateX(0deg);
+  }
+  to {
+    transform: rotateX(180deg);
+  }
+}
+@keyframes turnX-r {
+  from {
+    transform: rotateX(180deg);
+  }
+  to {
+    transform: rotateX(0deg);
+  }
+}
+@keyframes turnY {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(180deg);
+  }
+}
+@keyframes turnY-r {
+  from {
+    transform: rotateY(180deg);
+  }
+  to {
+    transform: rotateY(0deg);
+  }
 }
