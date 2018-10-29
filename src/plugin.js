@@ -32,7 +32,7 @@ function bigChase(rate) {
   bullets.add(new FatalBullet(rate));
 }
 
-function genWave(h = 175, s = INIT_BULLET_MIN_SPEED, cycle = 10, slope = 50) {
+function genWave(h = 175, s = INIT_BULLET_MIN_SPEED, cycle = 6, slope = 40) {
   let waveCenter = random(
     BULLET_HEIGHT / 2 + h / 2 + (cycle / 2) * slope,
     height - BULLET_HEIGHT / 2 - h / 2 - (cycle / 2) * slope,
