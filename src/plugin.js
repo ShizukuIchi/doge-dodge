@@ -4,7 +4,7 @@ function genOneHole(h = 150, s = INIT_BULLET_MIN_SPEED, c = height / 2) {
 }
 function oneHole(holeHeight, speed, center) {
   const holeCenter = center || random(holeHeight / 2, height - holeHeight / 2);
-  for (let i = BULLET_HEIGHT / 2; i < height; i += BULLET_HEIGHT) {
+  for (let i = BULLET_HEIGHT / 2; i < height; i += 5 * BULLET_HEIGHT) {
     if (i < holeCenter - holeHeight / 2 || i > holeCenter + holeHeight / 2) {
       bullets.add(new Bullet(width, i, BULLET_WIDTH, BULLET_HEIGHT, -speed, 0));
     }
