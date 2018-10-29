@@ -26,8 +26,8 @@ let map;
 // game configuration
 const INIT_BULLET_SPEED_RATE = 1;
 const INIT_FRAMES_EVERY_BULLET = 18;
-const INIT_BULLET_MAX_SPEED = 6;
-const INIT_BULLET_MIN_SPEED = 4;
+const INIT_BULLET_MAX_SPEED = 8;
+const INIT_BULLET_MIN_SPEED = 8;
 const BULLET_WIDTH = 20;
 const BULLET_HEIGHT = 13;
 const BULLET_SRC = './assets/bullet.png';
@@ -57,6 +57,7 @@ function preload() {
 
 // invoke one time to setup canvas
 function setup() {
+  frameRate(40);
   // global width, height!!
   createCanvas(1000, 800).parent('game');
   game = document.querySelector('#game');
