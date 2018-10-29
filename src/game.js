@@ -25,7 +25,7 @@ let map;
 
 // game configuration
 const INIT_BULLET_SPEED_RATE = 1;
-const INIT_FRAMES_EVERY_BULLET = 18;
+const INIT_FRAMES_EVERY_BULLET = 15;
 const INIT_BULLET_MAX_SPEED = 8;
 const INIT_BULLET_MIN_SPEED = 8;
 const BULLET_WIDTH = 20;
@@ -38,7 +38,7 @@ const BULLET_G_SRC = './assets/bullet-g.png';
 const COLLISION_BOUNDARY = 5;
 const CHARACTER_WIDTH = 35;
 const CHARACTER_HEIGHT = 35;
-const CHARACTER_SPEED = 4;
+const CHARACTER_SPEED = 6;
 const CHARACTER_IMG_SRC = './assets/man.png';
 const CHARACTER_SOUND_SRC = './assets/dead.mp3';
 const BGM_SRC = './assets/yexi.mp3';
