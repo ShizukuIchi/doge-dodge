@@ -79,7 +79,7 @@ function setup() {
     {
       fn: genWave,
       arguments: [200, 195, 190, 185, 180],
-      stopTill: [150, 175, 200, 225],
+      stopTill: [150, 162.5, 175, 187.5, 200],
     },
     {
       fn: genStopper,
