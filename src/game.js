@@ -25,7 +25,7 @@ let map;
 
 // game configuration
 const INIT_BULLET_SPEED_RATE = 1;
-const INIT_FRAMES_EVERY_BULLET = 15;
+const INIT_FRAMES_EVERY_BULLET = 12;
 const INIT_BULLET_MAX_SPEED = 8;
 const INIT_BULLET_MIN_SPEED = 8;
 const BULLET_WIDTH = 20;
@@ -74,13 +74,13 @@ function setup() {
   plugins = [
     {
       fn: genOneHole,
-      arguments: [190, 180, 170, 160],
+      arguments: [160],
       stopTill: [1],
     },
     {
       fn: genWave,
       arguments: [200, 195, 190, 185, 180],
-      stopTill: [150, 162.5, 175, 187.5, 200],
+      stopTill: [130, 140, 150],
     },
     {
       fn: genStopper,
@@ -89,7 +89,7 @@ function setup() {
     },
     {
       fn: genBigChase,
-      arguments: [2.5, 2.7, 2.9],
+      arguments: [2.1, 2.3, 2.5],
       stopTill: [1],
     },
     {
@@ -99,23 +99,23 @@ function setup() {
     },
     {
       fn: genAccelerator,
-      arguments: [1, 1, 1, -2],
+      arguments: [2],
       stopTill: [5, 6, 7],
     },
     {
       fn: genRandomer,
-      arguments: [0],
+      arguments: [0.6, 0.5, 0.45],
       stopTill: [5, 6, 7],
     },
     {
       fn: genPlumber,
-      arguments: [0],
+      arguments: [0.33],
       stopTill: [1],
     },
     {
       fn: genCrosser,
       arguments: [0],
-      stopTill: [6],
+      stopTill: [5],
     },
   ];
   mapPlugins = ['turnX', 'turnY', 'turnZ1', 'turnZ2', 'turnZ3'];
@@ -194,7 +194,7 @@ function addBarrages() {
   if (scoreCount === 1) {
     barrages.add(regular, -1);
   }
-  if (scoreCount && scoreCount % 300 === 0) {
+  if (scoreCount && scoreCount % 200 === 0) {
     let barrage = plugins[floor(random(0, plugins.length))];
     let arg = barrage.arguments[floor(random(0, barrage.arguments.length))];
     let stopTill = barrage.stopTill[floor(random(0, barrage.stopTill.length))];

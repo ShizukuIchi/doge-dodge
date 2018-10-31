@@ -27,10 +27,10 @@ class Bullets {
 
 class Bullet {
   constructor(x, y, w, h, xs, ys) {
-    this.w = w || BULLET_WIDTH;
-    this.h = h || BULLET_HEIGHT;
     this.x = x || width;
     this.y = y || height / 2;
+    this.w = w || BULLET_WIDTH;
+    this.h = h || BULLET_HEIGHT;
     this.xspeed = xs || -INIT_BULLET_MIN_SPEED * bulletSpeedRate;
     this.yspeed = ys || 0;
   }
@@ -79,6 +79,7 @@ class Stopper extends Bullet {
     this.h = BULLET_HEIGHT + 10;
     this.y = random(this.h / 2, height - this.h / 2);
     this.yspeed = 0;
+    this.xspeed = this.xspeed * 1.5;
     this.block = block;
   }
 
@@ -112,10 +113,10 @@ class Vanisher extends Bullet {
 
   update() {
     if (this.x / width < 0.9 && this.tint >= 0) {
-      this.tint -= 10;
+      this.tint -= 15;
     }
     if (this.x / width < 0.4 && this.tint <= 255) {
-      this.tint += 20;
+      this.tint += 25;
     }
     this.x += this.xspeed;
     this.y += this.yspeed;
@@ -128,17 +129,18 @@ class Vanisher extends Bullet {
 }
 
 class Randomer extends Bullet {
-  constructor() {
+  constructor(stopRand) {
     super();
     this.w = BULLET_WIDTH + 10;
     this.h = BULLET_HEIGHT + 10;
     this.y = random(this.h / 2, height - this.h / 2);
     this.xspeed = 1.7 * this.xspeed;
     this.yspeed = 0;
+    this.stopRand = stopRand;
   }
 
   update() {
-    if (this.x > width * 0.5 && scoreCount % 15 === 0) {
+    if (this.x > width * this.stopRand && scoreCount % 10 === 0) {
       this.y = random(this.h / 2, height - this.h / 2);
     }
     this.x += this.xspeed;
@@ -175,7 +177,7 @@ class Accelerator extends Bullet {
 }
 
 class Plumber extends Bullet {
-  constructor() {
+  constructor(stopMove) {
     super();
     this.w = BULLET_WIDTH + 10;
     this.h = BULLET_HEIGHT + 10;
@@ -183,10 +185,14 @@ class Plumber extends Bullet {
     this.y = character.y > height / 2 ? height : 0 - this.h;
     this.yspeed = character.y > height / 2 ? -2 : 2;
     this.xspeed = -5;
+    this.stopMove = stopMove;
   }
 
   update() {
-    if (this.y < height / 3 || this.y > (height / 3) * 2) {
+    if (
+      this.y < height * this.stopMove ||
+      this.y > height * (1 - this.stopMove)
+    ) {
       this.y += this.yspeed;
     } else {
       this.x += this.xspeed;
