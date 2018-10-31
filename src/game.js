@@ -25,7 +25,7 @@ let map;
 
 // game configuration
 const INIT_BULLET_SPEED_RATE = 1;
-const INIT_FRAMES_EVERY_BULLET = 12;
+const INIT_FRAMES_EVERY_BULLET = 10;
 const INIT_BULLET_MAX_SPEED = 8;
 const INIT_BULLET_MIN_SPEED = 8;
 const BULLET_WIDTH = 20;
@@ -79,12 +79,12 @@ function setup() {
     },
     {
       fn: genWave,
-      arguments: [200, 195, 190, 185, 180],
+      arguments: [200, 190, 180],
       stopTill: [130, 140, 150],
     },
     {
       fn: genStopper,
-      arguments: [100, 125, 150, 175],
+      arguments: [120, 135, 150],
       stopTill: [3, 4],
     },
     {
@@ -194,7 +194,7 @@ function addBarrages() {
   if (scoreCount === 1) {
     barrages.add(regular, -1);
   }
-  if (scoreCount && scoreCount % 200 === 0) {
+  if (scoreCount && scoreCount % 250 === 0) {
     let barrage = plugins[floor(random(0, plugins.length))];
     let arg = barrage.arguments[floor(random(0, barrage.arguments.length))];
     let stopTill = barrage.stopTill[floor(random(0, barrage.stopTill.length))];
