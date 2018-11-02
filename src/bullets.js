@@ -20,6 +20,27 @@ class Bullets {
     }
     return collision === 0;
   }
+  update() {
+    this.bullets.forEach(bullet => {
+      bullet.update();
+      if (bullet.x + bullet.w < 1) bullet.dead = true;
+    });
+  }
+  show() {
+    this.bullets.forEach(bullet => {
+      bullet.show();
+    });
+  }
+  countCollisions(stuff) {
+    let collision = 0;
+    this.bullets.forEach(bullet => {
+      collision += isColliding(bullet, stuff, COLLISION_BOUNDARY) ? 1 : 0;
+    });
+    return collision;
+  }
+  clearDead() {
+    this.bullets = this.bullets.filter(bullet => !bullet.dead);
+  }
   clear() {
     this.bullets = [];
   }
@@ -33,6 +54,7 @@ class Bullet {
     this.h = h || BULLET_HEIGHT;
     this.xspeed = xs || -INIT_BULLET_MIN_SPEED * bulletSpeedRate;
     this.yspeed = ys || 0;
+    this.dead = false;
   }
   update() {
     this.x += this.xspeed;
@@ -45,7 +67,7 @@ class Bullet {
   }
 }
 
-class FatalBullet extends Bullet {
+class FastAimer extends Bullet {
   constructor(rate) {
     super();
     this.w = BULLET_WIDTH + 10;
@@ -67,6 +89,26 @@ class FatalBullet extends Bullet {
     if (this.y < 1) {
       this.y = 1;
       this.yspeed = -this.yspeed;
+    }
+  }
+}
+
+class SlowChaser extends Bullet {
+  constructor() {
+    super();
+    this.w = BULLET_WIDTH + 10;
+    this.h = BULLET_HEIGHT + 10;
+    this.y = height / 2;
+    this.xspeed = this.xspeed * 0.8;
+    this.yspeed = Math.abs(character.yspeed * 0.5);
+  }
+
+  update() {
+    this.x += this.xspeed;
+    if (this.y > character.y) {
+      this.y -= this.yspeed;
+    } else {
+      this.y += this.yspeed;
     }
   }
 }
@@ -206,8 +248,8 @@ class Plumber extends Bullet {
 class Crosser extends Bullet {
   constructor() {
     super();
-    this.w = BULLET_WIDTH + 10;
-    this.h = BULLET_HEIGHT + 10;
+    this.w = BULLET_WIDTH;
+    this.h = BULLET_HEIGHT;
     this.y = random(this.h / 2, height - this.h / 2);
     if (this.y > height / 2) {
       this.y += height / 2;
@@ -224,6 +266,6 @@ class Crosser extends Bullet {
     this.x += this.xspeed;
   }
   show() {
-    image(bulletPImg, this.x, this.y, this.w, this.h);
+    image(bulletImg, this.x, this.y, this.w, this.h);
   }
 }

@@ -24,7 +24,14 @@ function genBigChase(rate) {
 }
 function bigChase(rate) {
   bulletSound.play();
-  bullets.add(new FatalBullet(rate));
+  bullets.add(new FastAimer(rate));
+}
+
+function genSlowChaser() {
+  return slowChaser;
+}
+function slowChaser() {
+  bullets.add(new SlowChaser());
 }
 
 function genWave(h, slope = 45) {
