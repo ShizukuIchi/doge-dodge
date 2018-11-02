@@ -125,7 +125,7 @@ function setup() {
   ];
   mapPlugins = ["turnX", "turnY", "turnZ1", "turnZ2", "turnZ3"];
   status = "stopped";
-  // bgm.loop();
+  bgm.loop();
   if (!localStorage.getItem("highest")) {
     highest = 0;
     localStorage.setItem("highest", 0);
