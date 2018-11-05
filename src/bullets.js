@@ -5,17 +5,18 @@ class Bullets {
   add(bullet) {
     this.bullets.push(bullet);
   }
-  update() {
-    this.bullets.forEach(bullet => {
+  process() {
+    this.bullets = this.bullets.filter(bullet => {
       bullet.update();
-    });
-    this.clearDead()
-  }
-  show() {
-    this.bullets.forEach(bullet => {
       bullet.show();
+      return bullet.x + bullet.w >= 0;
     });
   }
+  // show() {
+  //   this.bullets.forEach(bullet => {
+  //     bullet.show();
+  //   });
+  // }
   countCollisions(stuff) {
     let collision = 0;
     this.bullets.forEach(bullet => {
@@ -23,9 +24,9 @@ class Bullets {
     });
     return collision;
   }
-  clearDead() {
-    this.bullets = this.bullets.filter(bullet => bullet.x + bullet.w >= 0);
-  }
+  // clearDead() {
+  //   this.bullets = this.bullets.filter(bullet => bullet.x + bullet.w >= 0);
+  // }
   clear() {
     this.bullets = [];
   }
