@@ -23,8 +23,8 @@ class Bullets {
   update() {
     this.bullets.forEach(bullet => {
       bullet.update();
-      if (bullet.x + bullet.w < 1) bullet.dead = true;
     });
+    this.clearDead()
   }
   show() {
     this.bullets.forEach(bullet => {
@@ -39,7 +39,7 @@ class Bullets {
     return collision;
   }
   clearDead() {
-    this.bullets = this.bullets.filter(bullet => !bullet.dead);
+    this.bullets = this.bullets.filter(bullet => bullet.x + bullet.w >= 0);
   }
   clear() {
     this.bullets = [];
@@ -54,7 +54,6 @@ class Bullet {
     this.h = h || BULLET_HEIGHT;
     this.xspeed = xs || -INIT_BULLET_MIN_SPEED * bulletSpeedRate;
     this.yspeed = ys || 0;
-    this.dead = false;
   }
   update() {
     this.x += this.xspeed;

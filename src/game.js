@@ -198,7 +198,6 @@ function draw() {
       status = "stopped";
       noLoop(); // stop loop
     }
-    bullets.clearDead();
     scoreCount += 1;
   }
 }
