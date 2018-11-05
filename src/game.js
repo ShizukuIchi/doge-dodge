@@ -188,10 +188,8 @@ function draw() {
     bullets.show();
     if (checkCharacterCollision() > 0) {
       character.lives -= 1;
-      character.setStatus("invincible");
-      setTimeout(() => {
-        character.setStatus("normal");
-      }, 2000);
+      character.setStatus('slow', 2000);        
+      character.setInvincible(2000)
     }
     if (character.lives <= 0) {
       checkHighScore();
@@ -272,71 +270,27 @@ function keyPressed() {
 }
 function mouseClicked(e) {
   if (e.target.className === "p5Canvas" && status === "started") {
-    character.yspeed = -character.yspeed;
+    character.changeDirection()
   }
 }
 function touchStarted() {
   if (screen.width >= 768) return;
   if (status === "started") {
-    character.yspeed = -character.yspeed;
+    character.changeDirection()
   } else {
     reset();
   }
 }
 
-class Character {
-  constructor() {
-    // start position
-    this.x = 50;
-    this.y = 100;
-    this.w = CHARACTER_WIDTH;
-    this.h = CHARACTER_HEIGHT;
-    this.xspeed = 0;
-    this.yspeed = CHARACTER_SPEED;
-    this.lives = 3;
-    this.status = "normal";
-  }
 
-  update() {
-    this.x += this.xspeed;
-    this.y += this.yspeed;
-
-    // map boundary = 1
-    if (this.y + this.h > height - 1) {
-      this.y = height - 1 - this.h;
-      this.yspeed = -this.yspeed;
-    }
-    if (this.y < 1) {
-      this.y = 1;
-      this.yspeed = -this.yspeed;
-    }
-  }
-  setStatus(status) {
-    this.status = status;
-  }
-  // draw character
-  show() {
-    if (this.status === "normal") {
-      image(characterImg, this.x, this.y, this.w, this.h);
-    } else if (this.status === "invincible") {
-      tint(255, 125);
-      image(characterImg, this.x, this.y, this.w, this.h);
-      tint(255, 255);
-    }
-  }
-}
 function remainsLivesString() {
   let s = "";
   for (let i = 0; i < character.lives; i += 1) s += "＊";
   return s;
 }
 function checkCharacterCollision() {
-  switch (character.status) {
-    case "invincible":
-      return 0;
-    case "normal":
-      return bullets.countCollisions(character);
-  }
+  if(character.isInvincible) return 0
+  return bullets.countCollisions(character);
 }
 function isColliding(a, b, boundary) {
   return (
