@@ -5,21 +5,6 @@ class Bullets {
   add(bullet) {
     this.bullets.push(bullet);
   }
-  next() {
-    let collision = 0;
-    for (let i = 0; i < this.bullets.length; i++) {
-      let bullet = this.bullets[i];
-      if (bullet.x + bullet.w < 1) {
-        this.bullets.splice(i, 1);
-        i -= 1;
-        continue;
-      }
-      bullet.update();
-      bullet.show();
-      collision += isColliding(bullet, character, COLLISION_BOUNDARY) ? 1 : 0;
-    }
-    return collision === 0;
-  }
   update() {
     this.bullets.forEach(bullet => {
       bullet.update();
@@ -100,7 +85,7 @@ class SlowChaser extends Bullet {
     this.h = BULLET_HEIGHT + 10;
     this.y = height / 2;
     this.xspeed = this.xspeed * 0.8;
-    this.yspeed = Math.abs(character.yspeed * 0.5);
+    this.yspeed = Math.abs(character.yspeed * 0.6);
   }
 
   update() {
