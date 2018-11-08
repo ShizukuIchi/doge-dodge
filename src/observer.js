@@ -1,4 +1,4 @@
-const { Observable } = rxjs;
+const { Observable, merge } = rxjs;
 const { mapTo, filter, delay } = rxjs.operators;
 
 function RxFromListeners(listeners) {
@@ -23,10 +23,13 @@ class Listeners {
 const listeners = new Listeners();
 const $event = RxFromListeners(listeners);
 
+const rootEpic = combineEpics(
+  addLongBarrageEpic,
+  removeShortBarrageEpic,
+  removeLongBarrageEpic,
+);
 $event.subscribe(handler);
-addLongBarrageEpic($event).subscribe(handler);
-removeShortBarrageEpic($event).subscribe(handler);
-removeLongBarrageEpic($event).subscribe(handler);
+rootEpic($event).subscribe(handler);
 
 function addLongBarrageEpic($event) {
   return $event.pipe(
@@ -69,6 +72,9 @@ function handler(evt) {
     // console.log(evt);
   }
 }
+function combineEpics(...epics) {
+  return event$ => merge(...epics.map(epic => epic(event$)));
+}
 
 function ofType(...types) {
   return filter(evt => types.includes(evt.type));
@@ -83,6 +89,7 @@ function ofBarrage(...names) {
     return names.includes(name);
   });
 }
+
 // ─────────▄──────────────▄
 // ────────▌▒█───────────▄▀▒▌
 // ────────▌▒▒▀▄───────▄▀▒▒▒▐
