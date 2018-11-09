@@ -5,7 +5,7 @@ class Bullets {
   add(bullet) {
     this.bullets.push(bullet);
   }
-  process() {
+  showNext() {
     this.bullets = this.bullets.filter(bullet => {
       bullet.update();
       bullet.show();

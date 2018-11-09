@@ -183,7 +183,7 @@ function draw() {
     text(`分數：${scoreCount}`, 5, 0);
     text(`生命：${remainsLivesString()}`, 5, 25);
     map();
-    bullets.process();
+    bullets.showNext();
     // bullets.show();
     if (checkCharacterCollision() > 0) {
       character.lives -= 1;
