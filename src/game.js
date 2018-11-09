@@ -226,11 +226,11 @@ function mapChanger(interval) {
       timer = setTimeout(() => {
         if (status === 'started') changeMap(mapPlugin);
         else clearTimeout(timer);
-      }, 1000);
+      }, 1800);
       reverseTimer = setTimeout(() => {
         if (status === 'started') changeMap(mapPlugin + '-r');
         else clearTimeout(reverseTimer);
-      }, 4000);
+      }, 8000);
     }
   };
 }
