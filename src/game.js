@@ -48,7 +48,6 @@ const FONT_SRC = 'assets/NotoSansTC-Regular.otf';
 
 function preload() {
   soundFormats('mp3');
-  bgm = loadSound(BGM_SRC);
   font = loadFont(FONT_SRC);
   addSpeedHint = loadSound(ADD_SPEED_MUSIC_SRC);
   bulletSound = loadSound(BULLET_SOUND_SRC);
@@ -58,6 +57,8 @@ function preload() {
 // invoke one time to setup canvas
 function setup() {
   frameRate(28);
+  bgm = loadSound(BGM_SRC, () => bgm.loop());
+
   // global width, height!!
   createCanvas(1000, 800).parent('game');
   game = document.querySelector('#game');
@@ -125,7 +126,6 @@ function setup() {
   ];
   mapPlugins = ['turnX', 'turnY', 'turnZ1', 'turnZ2', 'turnZ3'];
   status = 'stopped';
-  bgm.loop();
   if (!localStorage.getItem('highest')) {
     highest = 0;
     localStorage.setItem('highest', 0);
@@ -176,7 +176,6 @@ function draw() {
     barrages.generate();
     character.update();
     character.show();
-    wolfSound();
     addBarrages();
     fill(255);
     textSize(20);
@@ -219,27 +218,24 @@ function addBarrages() {
 }
 function mapChanger(interval) {
   let mapPlugin = '';
-  let reverseScore = -1;
+  let timer, reverseTimer;
   return function() {
     if (scoreCount && scoreCount % interval === 0) {
-      reverseScore = scoreCount + 300;
+      addSpeedHint.play();
       mapPlugin = mapPlugins[floor(random(0, mapPlugins.length))];
-      changeMap(mapPlugin);
-    }
-    if (reverseScore === scoreCount) {
-      changeMap(mapPlugin + '-r');
-      mapPlugin = '';
+      timer = setTimeout(() => {
+        if (status === 'started') changeMap(mapPlugin);
+        else clearTimeout(timer);
+      }, 1000);
+      reverseTimer = setTimeout(() => {
+        if (status === 'started') changeMap(mapPlugin + '-r');
+        else clearTimeout(reverseTimer);
+      }, 4000);
     }
   };
 }
 function changeMap(plugin) {
   game.style.animation = plugin + ' 1s forwards';
-}
-
-function wolfSound() {
-  if (scoreCount && scoreCount % 1000 === 0) {
-    addSpeedHint.play();
-  }
 }
 
 function checkHighScore() {
