@@ -32,7 +32,6 @@ const BULLET_WIDTH = 20;
 const BULLET_HEIGHT = 13;
 const BULLET_SRC = './assets/bullet.png';
 const BULLET_B_SRC = './assets/bullet-b.png';
-const BULLET_P_SRC = './assets/bullet-p.png';
 const BULLET_R_SRC = './assets/bullet-r.png';
 const BULLET_G_SRC = './assets/bullet-g.png';
 const COLLISION_BOUNDARY = 5;
@@ -206,9 +205,6 @@ function draw() {
 }
 
 function addBarrages() {
-  if (scoreCount === 1) {
-    barrages.add(regular, -1);
-  }
   if (scoreCount && scoreCount % 250 === 0) {
     let barrage = plugins.pick();
     let arg = barrage.arguments.pick();
@@ -300,44 +296,4 @@ function isColliding(a, b, boundary) {
     a.y - b.y < b.h - boundary &&
     b.y - a.y < a.h - boundary
   );
-}
-
-class Barrages {
-  constructor() {
-    this.barrages = [];
-  }
-  add(fn, tillScore) {
-    this.barrages.push(new Barrage(fn, tillScore));
-  }
-  remove(fn) {
-    this.barrages = this.barrages.filter(b => {
-      let name = b.fn.name;
-      name = name.startsWith('bound ') ? name.split(' ')[1] : name;
-      let _name = fn.name;
-      _name = _name.startsWith('bound ') ? _name.split(' ')[1] : _name;
-      return name !== _name;
-    });
-  }
-  generate() {
-    this.barrages
-      .filter(b => {
-        // b.fn();
-        if (b.stopScore > 0 && b.stopScore + 1 <= scoreCount) {
-          listeners.emitEvent({ type: 'remove', barrage: b.fn });
-          return false;
-        }
-        return true;
-      })
-      .forEach(b => b.fn());
-  }
-  clear() {
-    this.barrages = [];
-  }
-}
-
-class Barrage {
-  constructor(fn, stopScore) {
-    this.fn = fn;
-    this.stopScore = stopScore;
-  }
 }

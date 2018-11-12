@@ -8,12 +8,12 @@ class Character {
     this.xspeed = 0;
     this.yspeed = CHARACTER_SPEED;
     this.lives = 3;
-    this.status = "normal";
+    this.status = 'normal';
     this.isInvincible = false;
   }
 
   update() {
-    switch(this.status) {
+    switch (this.status) {
       case 'slow':
         this.y += this.yspeed * 0.5;
         this.x += this.xspeed;
@@ -35,25 +35,26 @@ class Character {
     this.status = status;
     if (ms) {
       setTimeout(() => {
-        this.status = 'normal'
+        this.status = 'normal';
       }, ms);
     }
   }
   setInvincible(ms = 2000) {
-    this.isInvincible = true; 
+    this.isInvincible = true;
     setTimeout(() => {
       this.isInvincible = false;
     }, ms);
   }
-  changeDirection() {    
+  changeDirection() {
     this.yspeed = -this.yspeed;
   }
   show() {
-    if(this.isInvincible) tint(255, 125);
-    switch(this.status) {
-      default:
-        image(characterImg, this.x, this.y, this.w, this.h);
+    if (this.isInvincible) {
+      tint(255, 125);
+      image(characterImg, this.x, this.y, this.w, this.h);
+      tint(255, 255);
+    } else {
+      image(characterImg, this.x, this.y, this.w, this.h);
     }
-    tint(255, 255);
   }
 }
