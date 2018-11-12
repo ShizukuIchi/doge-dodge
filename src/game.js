@@ -140,6 +140,9 @@ function setup() {
   textAlign(LEFT, TOP);
   textSize(20);
   map = mapChanger(1000);
+  Array.prototype.pick = function() {
+    return this[Math.floor(random(0, this.length))];
+  };
 }
 
 function reset() {
@@ -207,9 +210,9 @@ function addBarrages() {
     barrages.add(regular, -1);
   }
   if (scoreCount && scoreCount % 250 === 0) {
-    let barrage = plugins[floor(random(0, plugins.length))];
-    let arg = barrage.arguments[floor(random(0, barrage.arguments.length))];
-    let stopTill = barrage.stopTill[floor(random(0, barrage.stopTill.length))];
+    let barrage = plugins.pick();
+    let arg = barrage.arguments.pick();
+    let stopTill = barrage.stopTill.pick();
     listeners.emitEvent({
       type: 'add',
       barrage: barrage.fn(arg),
@@ -223,7 +226,7 @@ function mapChanger(interval) {
   return function() {
     if (scoreCount && scoreCount % interval === 0) {
       reverseScore = scoreCount + 300;
-      mapPlugin = mapPlugins[floor(random(0, mapPlugins.length))];
+      mapPlugin = mapPlugins.pick();
       changeMap(mapPlugin);
     }
     if (reverseScore === scoreCount) {
