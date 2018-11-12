@@ -47,7 +47,6 @@ const FONT_SRC = 'assets/NotoSansTC-Regular.otf';
 
 function preload() {
   soundFormats('mp3');
-  bgm = loadSound(BGM_SRC);
   font = loadFont(FONT_SRC);
   addSpeedHint = loadSound(ADD_SPEED_MUSIC_SRC);
   bulletSound = loadSound(BULLET_SOUND_SRC);
@@ -57,6 +56,8 @@ function preload() {
 // invoke one time to setup canvas
 function setup() {
   frameRate(28);
+  bgm = loadSound(BGM_SRC, () => bgm.loop());
+
   // global width, height!!
   createCanvas(1000, 800).parent('game');
   game = document.querySelector('#game');
@@ -124,7 +125,6 @@ function setup() {
   ];
   mapPlugins = ['turnX', 'turnY', 'turnZ1', 'turnZ2', 'turnZ3'];
   status = 'stopped';
-  bgm.loop();
   if (!localStorage.getItem('highest')) {
     highest = 0;
     localStorage.setItem('highest', 0);
@@ -178,7 +178,6 @@ function draw() {
     barrages.generate();
     character.update();
     character.show();
-    wolfSound();
     addBarrages();
     fill(255);
     textSize(20);
@@ -186,7 +185,7 @@ function draw() {
     text(`分數：${scoreCount}`, 5, 0);
     text(`生命：${remainsLivesString()}`, 5, 25);
     map();
-    bullets.process();
+    bullets.showNext();
     // bullets.show();
     if (checkCharacterCollision() > 0) {
       character.lives -= 1;
@@ -218,27 +217,24 @@ function addBarrages() {
 }
 function mapChanger(interval) {
   let mapPlugin = '';
-  let reverseScore = -1;
+  let timer, reverseTimer;
   return function() {
     if (scoreCount && scoreCount % interval === 0) {
-      reverseScore = scoreCount + 300;
-      mapPlugin = mapPlugins.pick();
-      changeMap(mapPlugin);
-    }
-    if (reverseScore === scoreCount) {
-      changeMap(mapPlugin + '-r');
-      mapPlugin = '';
+      addSpeedHint.play();
+      mapPlugin = mapPlugins[floor(random(0, mapPlugins.length))];
+      timer = setTimeout(() => {
+        if (status === 'started') changeMap(mapPlugin);
+        else clearTimeout(timer);
+      }, 1800);
+      reverseTimer = setTimeout(() => {
+        if (status === 'started') changeMap(mapPlugin + '-r');
+        else clearTimeout(reverseTimer);
+      }, 8000);
     }
   };
 }
 function changeMap(plugin) {
   game.style.animation = plugin + ' 1s forwards';
-}
-
-function wolfSound() {
-  if (scoreCount && scoreCount % 1000 === 0) {
-    addSpeedHint.play();
-  }
 }
 
 function checkHighScore() {
