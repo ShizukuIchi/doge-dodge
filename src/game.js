@@ -5,7 +5,6 @@ let bulletImg;
 let bulletRImg;
 let bulletBImg;
 let bulletGImg;
-let bulletPImg;
 let bulletSpeedRate;
 let character;
 let characterImg;
@@ -22,6 +21,7 @@ let barrages;
 let plugins;
 let game;
 let map;
+let mapColor;
 
 // game configuration
 const INIT_BULLET_SPEED_RATE = 1;
@@ -44,6 +44,7 @@ const BGM_SRC = './assets/yexi.mp3';
 const ADD_SPEED_MUSIC_SRC = './assets/wolf.mp3';
 const BULLET_SOUND_SRC = './assets/shoot.mp3';
 const FONT_SRC = 'assets/NotoSansTC-Regular.otf';
+const INIT_MAP_COLOR = [51, 51, 51];
 
 function preload() {
   soundFormats('mp3');
@@ -62,15 +63,15 @@ function setup() {
   createCanvas(1000, 800).parent('game');
   game = document.querySelector('#game');
   game.style.opacity = '100';
-  background(51);
+  background(...INIT_MAP_COLOR);
   barrages = new Barrages();
   bullets = new Bullets();
+  mapColor = INIT_MAP_COLOR;
   characterImg = loadImage(CHARACTER_IMG_SRC);
   bulletImg = loadImage(BULLET_SRC);
   bulletRImg = loadImage(BULLET_R_SRC);
   bulletBImg = loadImage(BULLET_B_SRC);
   bulletGImg = loadImage(BULLET_G_SRC);
-  bulletPImg = loadImage(BULLET_P_SRC);
   plugins = [
     {
       fn: genOneHole,
@@ -174,7 +175,7 @@ function pause() {
 // invoke every frame by loop function
 function draw() {
   if (status === 'started') {
-    background(51);
+    background(...mapColor);
     barrages.generate();
     character.update();
     character.show();
@@ -189,6 +190,9 @@ function draw() {
     // bullets.show();
     if (checkCharacterCollision() > 0) {
       character.lives -= 1;
+      listeners.emitEvent({
+        type: 'hit',
+      });
       character.setStatus('slow', 2000);
       character.setInvincible(2000);
     }

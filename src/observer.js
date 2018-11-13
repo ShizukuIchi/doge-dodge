@@ -27,6 +27,7 @@ const rootEpic = combineEpics(
   addLongBarrageEpic,
   removeShortBarrageEpic,
   removeLongBarrageEpic,
+  shineRedEpic,
 );
 $event.subscribe(handler);
 rootEpic($event).subscribe(handler);
@@ -54,6 +55,13 @@ function removeLongBarrageEpic($event) {
     delay(500),
   );
 }
+function shineRedEpic($event) {
+  return $event.pipe(
+    ofType('hit'),
+    mapTo({ type: 'mapColor', color: 'black' }),
+    delay(70),
+  );
+}
 
 function addHandler(evt) {
   barrages.add(evt.barrage, evt.till);
@@ -68,8 +76,12 @@ function handler(evt) {
       return addHandler(evt);
     case 'remove':
       return removeHandler(evt);
+    case 'hit':
+      return (mapColor = [255, 0, 0]);
+    case 'mapColor':
+      return (mapColor = [51, 51, 51]);
     default:
-    // console.log(evt);
+      console.log(evt);
   }
 }
 function combineEpics(...epics) {
