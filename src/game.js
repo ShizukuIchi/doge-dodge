@@ -1,10 +1,6 @@
 let highest;
 let status;
 let bullets;
-// let bulletImg;
-// let bulletRImg;
-// let bulletBImg;
-// let bulletGImg;
 let bulletSpeedRate;
 let character;
 let characterImg;
@@ -30,10 +26,6 @@ const INIT_BULLET_MAX_SPEED = 8;
 const INIT_BULLET_MIN_SPEED = 8;
 const BULLET_WIDTH = 15;
 const BULLET_HEIGHT = 10;
-// const BULLET_SRC = './assets/bullet.png';
-// const BULLET_B_SRC = './assets/bullet-b.png';
-// const BULLET_R_SRC = './assets/bullet-r.png';
-// const BULLET_G_SRC = './assets/bullet-g.png';
 const COLLISION_BOUNDARY = 1;
 const CHARACTER_WIDTH = 35;
 const CHARACTER_HEIGHT = 35;
@@ -68,10 +60,6 @@ function setup() {
   bullets = new Bullets();
   mapColor = INIT_MAP_COLOR;
   characterImg = loadImage(CHARACTER_IMG_SRC);
-  // bulletImg = loadImage(BULLET_SRC);
-  // bulletRImg = loadImage(BULLET_R_SRC);
-  // bulletBImg = loadImage(BULLET_B_SRC);
-  // bulletGImg = loadImage(BULLET_G_SRC);
   plugins = [
     {
       fn: genOneHole,

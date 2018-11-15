@@ -12,11 +12,6 @@ class Bullets {
       return bullet.x + bullet.w >= 0;
     });
   }
-  // show() {
-  //   this.bullets.forEach(bullet => {
-  //     bullet.show();
-  //   });
-  // }
   countCollisions(stuff) {
     let collision = 0;
     this.bullets.forEach(bullet => {
@@ -24,9 +19,6 @@ class Bullets {
     });
     return collision;
   }
-  // clearDead() {
-  //   this.bullets = this.bullets.filter(bullet => bullet.x + bullet.w >= 0);
-  // }
   clear() {
     this.bullets = [];
   }
@@ -46,9 +38,7 @@ class Bullet {
     this.y += this.yspeed;
   }
 
-  // draw bullet
   show() {
-    // image(bulletImg, this.x, this.y, this.w, this.h);
     stroke('yellow');
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
@@ -101,7 +91,6 @@ class SlowChaser extends Bullet {
   }
 }
 
-// stopper
 class Stopper extends Bullet {
   constructor(block) {
     super();
@@ -126,7 +115,6 @@ class Stopper extends Bullet {
     this.y += this.yspeed;
   }
   show() {
-    // image(bulletRImg, this.x, this.y, this.w, this.h);
     stroke('red');
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
@@ -154,7 +142,6 @@ class Vanisher extends Bullet {
   }
   show() {
     tint(255, this.tint);
-    // image(bulletGImg, this.x, this.y, this.w, this.h);
     stroke('green');
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
@@ -165,8 +152,6 @@ class Vanisher extends Bullet {
 class Randomer extends Bullet {
   constructor(stopRand) {
     super();
-    // this.w = BULLET_WIDTH + 10;
-    // this.h = BULLET_HEIGHT + 10;
     this.y = random(this.h / 2, height - this.h / 2);
     this.xspeed = 1.7 * this.xspeed;
     this.yspeed = 0;
@@ -181,7 +166,6 @@ class Randomer extends Bullet {
     this.y += this.yspeed;
   }
   show() {
-    // image(bulletGImg, this.x, this.y, this.w, this.h);
     stroke('green');
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
@@ -191,8 +175,6 @@ class Randomer extends Bullet {
 class Accelerator extends Bullet {
   constructor(a) {
     super();
-    // this.w = BULLET_WIDTH + 10;
-    // this.h = BULLET_HEIGHT + 10;
     this.y = random(this.h / 2, height - this.h / 2);
     this.yspeed = 0;
     this.a = a;
@@ -209,7 +191,6 @@ class Accelerator extends Bullet {
     this.y += this.yspeed;
   }
   show() {
-    // image(bulletRImg, this.x, this.y, this.w, this.h);
     stroke('red');
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
@@ -219,8 +200,6 @@ class Accelerator extends Bullet {
 class Plumber extends Bullet {
   constructor(stopMove) {
     super();
-    // this.w = BULLET_WIDTH + 10;
-    // this.h = BULLET_HEIGHT + 10;
     this.x = character.x;
     this.y = character.y > height / 2 ? height : 0 - this.h;
     this.yspeed = character.y > height / 2 ? -2 : 2;
@@ -239,7 +218,6 @@ class Plumber extends Bullet {
     }
   }
   show() {
-    // image(bulletRImg, this.x, this.y, this.w, this.h);
     stroke('red');
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
@@ -249,8 +227,6 @@ class Plumber extends Bullet {
 class Crosser extends Bullet {
   constructor() {
     super();
-    // this.w = BULLET_WIDTH;
-    // this.h = BULLET_HEIGHT;
     this.y = random(this.h / 2, height - this.h / 2);
     if (this.y > height / 2) {
       this.y += height / 2;
@@ -267,7 +243,6 @@ class Crosser extends Bullet {
     this.x += this.xspeed;
   }
   show() {
-    // image(bulletImg, this.x, this.y, this.w, this.h);
     stroke('yellow');
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
