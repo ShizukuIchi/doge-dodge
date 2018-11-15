@@ -14,8 +14,10 @@ app.use(async (ctx, next) => {
   await next();
   if (ctx.url === '/') {
     console.log(`Knock knock! ${new Date()}`);
-  } else if (ctx.path === '/score')
+  } else if (ctx.path === '/score') {
     console.log(`Someone submit new score: ${ctx.request.query.score}`);
+    ctx.status = 200;
+  }
 });
 
 app.listen(port);
