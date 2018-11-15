@@ -26,7 +26,7 @@ const INIT_BULLET_MAX_SPEED = 8;
 const INIT_BULLET_MIN_SPEED = 8;
 const BULLET_WIDTH = 15;
 const BULLET_HEIGHT = 10;
-const COLLISION_BOUNDARY = 1;
+const COLLISION_BOUNDARY = 0;
 const CHARACTER_WIDTH = 35;
 const CHARACTER_HEIGHT = 35;
 const CHARACTER_SPEED = 6;
@@ -287,7 +287,6 @@ function drawGameOver() {
   }
 }
 function setupText() {
-  fill(255);
   stroke(255);
   strokeWeight(1);
   textSize(20);

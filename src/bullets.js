@@ -94,8 +94,6 @@ class SlowChaser extends Bullet {
 class Stopper extends Bullet {
   constructor(block) {
     super();
-    this.w = BULLET_WIDTH + 10;
-    this.h = BULLET_HEIGHT + 10;
     this.y = random(this.h / 2, height - this.h / 2);
     this.yspeed = 0;
     this.xspeed = this.xspeed * 1.5;
