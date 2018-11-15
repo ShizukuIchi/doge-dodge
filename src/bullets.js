@@ -48,7 +48,10 @@ class Bullet {
 
   // draw bullet
   show() {
-    image(bulletImg, this.x, this.y, this.w, this.h);
+    // image(bulletImg, this.x, this.y, this.w, this.h);
+    stroke('yellow');
+    strokeWeight(this.h);
+    line(this.x, this.y, this.x + this.w, this.y);
   }
 }
 

@@ -28,13 +28,13 @@ const INIT_BULLET_SPEED_RATE = 1;
 const INIT_FRAMES_EVERY_BULLET = 10;
 const INIT_BULLET_MAX_SPEED = 8;
 const INIT_BULLET_MIN_SPEED = 8;
-const BULLET_WIDTH = 20;
-const BULLET_HEIGHT = 13;
+const BULLET_WIDTH = 15;
+const BULLET_HEIGHT = 10;
 const BULLET_SRC = './assets/bullet.png';
 const BULLET_B_SRC = './assets/bullet-b.png';
 const BULLET_R_SRC = './assets/bullet-r.png';
 const BULLET_G_SRC = './assets/bullet-g.png';
-const COLLISION_BOUNDARY = 5;
+const COLLISION_BOUNDARY = 1;
 const CHARACTER_WIDTH = 35;
 const CHARACTER_HEIGHT = 35;
 const CHARACTER_SPEED = 6;
@@ -132,6 +132,8 @@ function setup() {
   } else {
     highest = localStorage.getItem('highest');
   }
+  stroke('white');
+  strokeWeight(1);
   fill(255);
   textFont(font);
   textAlign(CENTER, CENTER);
@@ -161,12 +163,9 @@ function reset() {
 }
 
 function pause() {
-  fill(255);
-  textSize(20);
-  textAlign(LEFT, TOP);
   if (status === 'started') {
     status = 'paused';
-    text(`分數：${String(scoreCount).replace(/./g, ' ')}　（暫停）`, 5, 0);
+    drawPause();
   } else if (status === 'paused') {
     status = 'started';
   }
@@ -180,14 +179,9 @@ function draw() {
     character.update();
     character.show();
     addBarrages();
-    fill(255);
-    textSize(20);
-    textAlign(LEFT, TOP);
-    text(`分數：${scoreCount}`, 5, 0);
-    text(`生命：${remainsLivesString()}`, 5, 25);
+    drawScore();
     map();
     bullets.showNext();
-    // bullets.show();
     if (checkCharacterCollision() > 0) {
       character.lives -= 1;
       listeners.emitEvent({
@@ -197,7 +191,7 @@ function draw() {
       character.setInvincible(2000);
     }
     if (character.lives <= 0) {
-      checkHighScore();
+      drawGameOver();
       fetch(`${location.href}score?score=${scoreCount}`);
       characterSound.play();
       status = 'stopped';
@@ -239,19 +233,6 @@ function mapChanger(interval) {
 }
 function changeMap(plugin) {
   game.style.animation = plugin + ' 1s forwards';
-}
-
-function checkHighScore() {
-  fill(255);
-  textSize(20);
-  textAlign(LEFT, TOP);
-  if (highest < scoreCount) {
-    highest = scoreCount;
-    localStorage.setItem('highest', highest);
-    text(`分數：${highest}　新高！`, 5, 0);
-  } else {
-    text(`分數：${scoreCount}　最高：${highest}`, 5, 0);
-  }
 }
 
 function keyPressed() {
@@ -296,4 +277,31 @@ function isColliding(a, b, boundary) {
     a.y - b.y < b.h - boundary &&
     b.y - a.y < a.h - boundary
   );
+}
+
+function drawScore() {
+  setupText();
+  text(`分數：${scoreCount}`, 5, 0);
+  text(`生命：${remainsLivesString()}`, 5, 25);
+}
+function drawPause() {
+  setupText();
+  text(`分數：${String(scoreCount).replace(/./g, ' ')}　（暫停）`, 5, 0);
+}
+function drawGameOver() {
+  setupText();
+  if (highest < scoreCount) {
+    highest = scoreCount;
+    localStorage.setItem('highest', highest);
+    text(`分數：${highest}　新高！`, 5, 0);
+  } else {
+    text(`分數：${scoreCount}　最高：${highest}`, 5, 0);
+  }
+}
+function setupText() {
+  fill(255);
+  stroke(255);
+  strokeWeight(1);
+  textSize(20);
+  textAlign(LEFT, TOP);
 }
