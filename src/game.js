@@ -60,7 +60,7 @@ function setup() {
   bgm = loadSound(BGM_SRC, () => bgm.loop());
 
   // global width, height!!
-  createCanvas(1000, 800).parent('game');
+  createCanvas(900, 800).parent('game');
   game = document.querySelector('#game');
   game.style.opacity = '100';
   background(...INIT_MAP_COLOR);
