@@ -58,8 +58,8 @@ class Bullet {
 class FastAimer extends Bullet {
   constructor(rate) {
     super();
-    this.w = BULLET_WIDTH + 10;
-    this.h = BULLET_HEIGHT + 10;
+    this.w = BULLET_WIDTH + 4;
+    this.h = BULLET_HEIGHT + 7;
     this.y = character ? character.y : random(this.h / 2, height - this.h / 2);
     this.xspeed = this.xspeed * rate;
     this.yspeed = character ? character.yspeed : 0;
@@ -84,8 +84,8 @@ class FastAimer extends Bullet {
 class SlowChaser extends Bullet {
   constructor() {
     super();
-    this.w = BULLET_WIDTH + 10;
-    this.h = BULLET_HEIGHT + 10;
+    this.w = BULLET_WIDTH + 2;
+    this.h = BULLET_HEIGHT + 2;
     this.y = height / 2;
     this.xspeed = this.xspeed * 0.8;
     this.yspeed = Math.abs(character.yspeed * 0.6);
@@ -126,15 +126,16 @@ class Stopper extends Bullet {
     this.y += this.yspeed;
   }
   show() {
-    image(bulletRImg, this.x, this.y, this.w, this.h);
+    // image(bulletRImg, this.x, this.y, this.w, this.h);
+    stroke('red');
+    strokeWeight(this.h);
+    line(this.x, this.y, this.x + this.w, this.y);
   }
 }
 
 class Vanisher extends Bullet {
   constructor() {
     super();
-    this.w = BULLET_WIDTH + 10;
-    this.h = BULLET_HEIGHT + 10;
     this.y = random(this.h / 2, height - this.h / 2);
     this.xspeed = 2 * this.xspeed;
     this.yspeed = 0;
@@ -153,7 +154,10 @@ class Vanisher extends Bullet {
   }
   show() {
     tint(255, this.tint);
-    image(bulletGImg, this.x, this.y, this.w, this.h);
+    // image(bulletGImg, this.x, this.y, this.w, this.h);
+    stroke('green');
+    strokeWeight(this.h);
+    line(this.x, this.y, this.x + this.w, this.y);
     tint(255, 255);
   }
 }
@@ -161,8 +165,8 @@ class Vanisher extends Bullet {
 class Randomer extends Bullet {
   constructor(stopRand) {
     super();
-    this.w = BULLET_WIDTH + 10;
-    this.h = BULLET_HEIGHT + 10;
+    // this.w = BULLET_WIDTH + 10;
+    // this.h = BULLET_HEIGHT + 10;
     this.y = random(this.h / 2, height - this.h / 2);
     this.xspeed = 1.7 * this.xspeed;
     this.yspeed = 0;
@@ -177,15 +181,18 @@ class Randomer extends Bullet {
     this.y += this.yspeed;
   }
   show() {
-    image(bulletGImg, this.x, this.y, this.w, this.h);
+    // image(bulletGImg, this.x, this.y, this.w, this.h);
+    stroke('green');
+    strokeWeight(this.h);
+    line(this.x, this.y, this.x + this.w, this.y);
   }
 }
 
 class Accelerator extends Bullet {
   constructor(a) {
     super();
-    this.w = BULLET_WIDTH + 10;
-    this.h = BULLET_HEIGHT + 10;
+    // this.w = BULLET_WIDTH + 10;
+    // this.h = BULLET_HEIGHT + 10;
     this.y = random(this.h / 2, height - this.h / 2);
     this.yspeed = 0;
     this.a = a;
@@ -202,15 +209,18 @@ class Accelerator extends Bullet {
     this.y += this.yspeed;
   }
   show() {
-    image(bulletRImg, this.x, this.y, this.w, this.h);
+    // image(bulletRImg, this.x, this.y, this.w, this.h);
+    stroke('red');
+    strokeWeight(this.h);
+    line(this.x, this.y, this.x + this.w, this.y);
   }
 }
 
 class Plumber extends Bullet {
   constructor(stopMove) {
     super();
-    this.w = BULLET_WIDTH + 10;
-    this.h = BULLET_HEIGHT + 10;
+    // this.w = BULLET_WIDTH + 10;
+    // this.h = BULLET_HEIGHT + 10;
     this.x = character.x;
     this.y = character.y > height / 2 ? height : 0 - this.h;
     this.yspeed = character.y > height / 2 ? -2 : 2;
@@ -229,15 +239,18 @@ class Plumber extends Bullet {
     }
   }
   show() {
-    image(bulletRImg, this.x, this.y, this.w, this.h);
+    // image(bulletRImg, this.x, this.y, this.w, this.h);
+    stroke('red');
+    strokeWeight(this.h);
+    line(this.x, this.y, this.x + this.w, this.y);
   }
 }
 
 class Crosser extends Bullet {
   constructor() {
     super();
-    this.w = BULLET_WIDTH;
-    this.h = BULLET_HEIGHT;
+    // this.w = BULLET_WIDTH;
+    // this.h = BULLET_HEIGHT;
     this.y = random(this.h / 2, height - this.h / 2);
     if (this.y > height / 2) {
       this.y += height / 2;
@@ -254,6 +267,9 @@ class Crosser extends Bullet {
     this.x += this.xspeed;
   }
   show() {
-    image(bulletImg, this.x, this.y, this.w, this.h);
+    // image(bulletImg, this.x, this.y, this.w, this.h);
+    stroke('yellow');
+    strokeWeight(this.h);
+    line(this.x, this.y, this.x + this.w, this.y);
   }
 }
