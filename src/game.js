@@ -18,6 +18,7 @@ let plugins;
 let game;
 let map;
 let mapColor;
+let items;
 
 // game configuration
 const INIT_BULLET_SPEED_RATE = 1;
@@ -58,6 +59,7 @@ function setup() {
   background(...INIT_MAP_COLOR);
   barrages = new Barrages();
   bullets = new Bullets();
+  items = new Items();
   mapColor = INIT_MAP_COLOR;
   characterImg = loadImage(CHARACTER_IMG_SRC);
   plugins = [
@@ -167,9 +169,11 @@ function draw() {
     character.update();
     character.show();
     addBarrages();
+    addItems();
     drawScore();
     map();
     bullets.showNext();
+    items.showNext();
     if (checkCharacterCollision() > 0) {
       character.lives -= 1;
       listeners.emitEvent({
@@ -193,7 +197,8 @@ function addBarrages() {
   // if (scoreCount === 1) {
   // barrages.add(fn, 5);
   // }
-  if (scoreCount && scoreCount % 250 === 0) {
+  if (!scoreCount) return;
+  if (scoreCount % 250 === 0) {
     let barrage = plugins.pick();
     let arg = barrage.arguments.pick();
     let stopTill = barrage.stopTill.pick();
@@ -201,6 +206,14 @@ function addBarrages() {
       type: "add",
       barrage: barrage.fn(arg),
       till: scoreCount + stopTill
+    });
+  }
+}
+function addItems() {
+  if (scoreCount % 2500 === 0) {
+    listeners.emitEvent({
+      type: "addItem",
+      item: new Life()
     });
   }
 }
@@ -291,6 +304,7 @@ function drawGameOver() {
   }
 }
 function setupText() {
+  fill(255);
   stroke(255);
   strokeWeight(1);
   textSize(20);

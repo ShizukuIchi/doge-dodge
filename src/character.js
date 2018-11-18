@@ -7,14 +7,14 @@ class Character {
     this.h = CHARACTER_HEIGHT;
     this.xspeed = 0;
     this.yspeed = CHARACTER_SPEED;
-    this.lives = 3;
-    this.status = 'normal';
+    this.lives = 1;
+    this.status = "normal";
     this.isInvincible = false;
   }
 
   update() {
     switch (this.status) {
-      case 'slow':
+      case "slow":
         this.y += this.yspeed * 0.5;
         this.x += this.xspeed;
         break;
@@ -35,7 +35,7 @@ class Character {
     this.status = status;
     if (ms) {
       setTimeout(() => {
-        this.status = 'normal';
+        this.status = "normal";
       }, ms);
     }
   }

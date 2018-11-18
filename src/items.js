@@ -5,20 +5,16 @@ class Items {
   add(item) {
     this.items.push(item);
   }
-  update() {
-    this.items.forEach(item => item.update());
-    this.clearDead();
-  }
-  judgeCollision(stuff) {
-    this.items.forEach(item => {
-      isColliding(item, stuff, COLLISION_BOUNDARY) ? item.effect() : null;
-    });
-  }
-  show() {
-    this.items.forEach(item => item.show());
-  }
-  clearDead() {
-    this.items = this.items.filter(item => item.x + item.w >= 0);
+  showNext() {
+    for (let i = this.items.length - 1; i >= 0; i -= 1) {
+      let item = this.items[i];
+      item.update();
+      item.show();
+      if (isColliding(item, character, COLLISION_BOUNDARY)) {
+        item.effect();
+        this.items.splice(i, 1);
+      } else if (item.x + item.w <= 0) this.items.splice(i, 1);
+    }
   }
   clear() {
     this.items = [];
@@ -28,13 +24,13 @@ class Item {
   constructor(x, y, w, h, xs, ys) {
     this.x = x || width;
     this.y = y || height / 2;
-    this.w = w || 20;
+    this.w = w || 40;
     this.h = h || 20;
-    this.xspeed = xs || -20;
+    this.xspeed = xs || -10;
     this.yspeed = ys || 0;
   }
   effect() {
-    console.log('item contact');
+    console.log("item contact");
   }
   update() {
     this.x += this.xspeed;
@@ -46,13 +42,11 @@ class Life extends Item {
     super();
   }
   effect() {
-    console.log('life contact');
+    character.lives += 1;
   }
   show() {
-    console.log('show life');
+    fill("pink");
+    noStroke();
+    ellipse(this.x, this.y, this.w);
   }
-}
-
-function life() {
-  items.add(new Life());
 }

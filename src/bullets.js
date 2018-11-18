@@ -6,11 +6,12 @@ class Bullets {
     this.bullets.push(bullet);
   }
   showNext() {
-    this.bullets = this.bullets.filter(bullet => {
+    for (let i = this.bullets.length - 1; i >= 0; i -= 1) {
+      let bullet = this.bullets[i];
       bullet.update();
       bullet.show();
-      return bullet.x + bullet.w >= 0;
-    });
+      if (bullet.x + bullet.w <= 0) this.bullets.splice(i, 1);
+    }
   }
   countCollisions(stuff) {
     let collision = 0;
