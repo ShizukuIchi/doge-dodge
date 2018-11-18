@@ -58,7 +58,7 @@ function removeLongBarrageEpic($event) {
 function shineRedEpic($event) {
   return $event.pipe(
     ofType("hit"),
-    mapTo({ type: "mapColor", color: "black" }),
+    mapTo({ type: "mapColor", color: [51, 51, 51] }),
     delay(70)
   );
 }
@@ -70,8 +70,20 @@ function removeHandler(evt) {
   barrages.remove(evt.barrage);
 }
 function addItemHandler({ item }) {
-  console.log(item);
   items.add(item);
+}
+function hitHandler({ bullets }) {
+  switch (character.status) {
+    case 'normal':
+      character.lives -= 1;
+      character.setStatus("slow", 2000);
+      character.setInvincible(2000);
+      listeners.emitEvent({
+        type: 'mapColor',
+        color: [255, 0, 0]
+      })
+      break
+  }
 }
 
 function handler(evt) {
@@ -81,9 +93,9 @@ function handler(evt) {
     case "remove":
       return removeHandler(evt);
     case "hit":
-      return (mapColor = [255, 0, 0]);
+      return hitHandler(evt)
     case "mapColor":
-      return (mapColor = [51, 51, 51]);
+      return (mapColor = evt.color);
     case "addItem":
       return addItemHandler(evt);
     default:

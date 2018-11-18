@@ -26,7 +26,7 @@ class Item {
     this.y = y || height / 2;
     this.w = w || 40;
     this.h = h || 20;
-    this.xspeed = xs || -10;
+    this.xspeed = xs || -14;
     this.yspeed = ys || 0;
   }
   effect() {

@@ -14,9 +14,9 @@ class Bullets {
     }
   }
   countCollisions(stuff) {
-    let collision = 0;
+    let collision = [];
     this.bullets.forEach(bullet => {
-      collision += isColliding(bullet, stuff, COLLISION_BOUNDARY) ? 1 : 0;
+      if (isColliding(bullet, stuff, COLLISION_BOUNDARY)) collision.push(bullet)
     });
     return collision;
   }

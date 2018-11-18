@@ -2,7 +2,7 @@ class Character {
   constructor() {
     // start position
     this.x = 50;
-    this.y = 100;
+    this.y = 20;
     this.w = CHARACTER_WIDTH;
     this.h = CHARACTER_HEIGHT;
     this.xspeed = 0;

@@ -174,13 +174,12 @@ function draw() {
     map();
     bullets.showNext();
     items.showNext();
-    if (checkCharacterCollision() > 0) {
-      character.lives -= 1;
+    let bulletCollision = checkCharacterCollision()
+    if (bulletCollision.length > 0) {
       listeners.emitEvent({
-        type: "hit"
+        type: "hit",
+        bullets: bulletCollision
       });
-      character.setStatus("slow", 2000);
-      character.setInvincible(2000);
     }
     if (character.lives <= 0) {
       drawGameOver();
@@ -272,7 +271,7 @@ function remainsLivesString() {
   return s;
 }
 function checkCharacterCollision() {
-  if (character.isInvincible) return 0;
+  if (character.isInvincible) return [];
   return bullets.countCollisions(character);
 }
 function isColliding(a, b, boundary) {
