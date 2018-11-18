@@ -39,7 +39,7 @@ class Bullet {
   }
 
   show() {
-    stroke('yellow');
+    stroke("yellow");
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
   }
@@ -78,7 +78,7 @@ class SlowChaser extends Bullet {
     this.h = BULLET_HEIGHT + 2;
     this.y = height / 2;
     this.xspeed = this.xspeed * 0.8;
-    this.yspeed = Math.abs(character.yspeed * 0.6);
+    this.yspeed = Math.abs(character.yspeed * 0.65);
   }
 
   update() {
@@ -113,7 +113,7 @@ class Stopper extends Bullet {
     this.y += this.yspeed;
   }
   show() {
-    stroke('red');
+    stroke("red");
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
   }
@@ -125,25 +125,22 @@ class Vanisher extends Bullet {
     this.y = random(this.h / 2, height - this.h / 2);
     this.xspeed = 2 * this.xspeed;
     this.yspeed = 0;
-    this.tint = 255;
+    this.alpha = 100;
   }
 
   update() {
-    if (this.x / width < 0.9 && this.tint >= 0) {
-      this.tint -= 15;
-    }
-    if (this.x / width < 0.4 && this.tint <= 255) {
-      this.tint += 25;
+    if (this.x / width > 0.6 && this.alpha > 3.5) {
+      this.alpha -= 5;
+    } else if (this.x / width < 0.5 && this.alpha < 92) {
+      this.alpha += 8;
     }
     this.x += this.xspeed;
     this.y += this.yspeed;
   }
   show() {
-    tint(255, this.tint);
-    stroke('green');
+    stroke(`rgba(0,255,0,${this.alpha / 100})`);
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
-    tint(255, 255);
   }
 }
 
@@ -164,7 +161,7 @@ class Randomer extends Bullet {
     this.y += this.yspeed;
   }
   show() {
-    stroke('green');
+    stroke("green");
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
   }
@@ -189,7 +186,7 @@ class Accelerator extends Bullet {
     this.y += this.yspeed;
   }
   show() {
-    stroke('red');
+    stroke("orange");
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
   }
@@ -216,7 +213,7 @@ class Plumber extends Bullet {
     }
   }
   show() {
-    stroke('red');
+    stroke("red");
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
   }
@@ -241,7 +238,7 @@ class Crosser extends Bullet {
     this.x += this.xspeed;
   }
   show() {
-    stroke('yellow');
+    stroke("yellow");
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
   }

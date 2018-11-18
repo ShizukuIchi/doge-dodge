@@ -190,6 +190,9 @@ function draw() {
 }
 
 function addBarrages() {
+  // if (scoreCount === 1) {
+  // barrages.add(fn, 5);
+  // }
   if (scoreCount && scoreCount % 250 === 0) {
     let barrage = plugins.pick();
     let arg = barrage.arguments.pick();
