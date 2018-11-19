@@ -142,6 +142,7 @@ function reset() {
   map = mapChanger(1000);
   barrages.clear();
   bullets.clear();
+  items.clear()
   character = new Character();
   scoreCount = 0;
   status = "started";

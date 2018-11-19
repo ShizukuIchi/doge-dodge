@@ -97,7 +97,7 @@ class Character {
       case 'normal':
         return ''
       case 'stunned':
-        return this.click2Move
+        return String(this.click2Move)
       case 'sicked':
         return 'Bluuuh!'
       case 'slow':
