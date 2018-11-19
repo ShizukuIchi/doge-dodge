@@ -1,3 +1,4 @@
+
 class Items {
   constructor() {
     this.items = [];
@@ -26,7 +27,7 @@ class Item {
     this.y = y || height / 2;
     this.w = w || 40;
     this.h = h || 20;
-    this.xspeed = xs || -14;
+    this.xspeed = xs || -12;
     this.yspeed = ys || 0;
   }
   effect() {
@@ -38,8 +39,9 @@ class Item {
   }
 }
 class Life extends Item {
-  constructor() {
+  constructor(y = 0.5) {
     super();
+    this.y = height*y
   }
   effect() {
     character.lives += 1;
@@ -51,9 +53,9 @@ class Life extends Item {
   }
 }
 class Stun extends Item {
-  constructor() {
+  constructor(y = 0.5) {
     super();
-    this.durability = 10
+    this.y = height*y
   }
   effect() {
     character.status = 'stunned'
@@ -65,3 +67,38 @@ class Stun extends Item {
     ellipse(this.x, this.y, this.w);
   }
 }
+
+class Unknown extends Item {
+  constructor(y = 0.5) {
+    super()
+    this.y = height*y
+  }
+  effect() {
+    itemTypes.pick().prototype.effect()
+  }
+  show() {
+    stroke(255)
+    strokeWeight(2)
+    textSize(25)
+    fill(255)
+    text('?', this.x-6, this.y-20)
+    noFill()
+    ellipse(this.x, this.y, this.w);
+  }
+}
+class Sick extends Item {
+  constructor(y = 0.5) {
+    super();
+    this.y = height*y
+  }
+  effect() {
+    character.setStatus('sicked', 5000)
+  }
+  show() {
+    noStroke();
+    fill("green");
+    ellipse(this.x, this.y, this.w);
+  }
+}
+
+const itemTypes = [Life, Stun, Sick, Unknown] 

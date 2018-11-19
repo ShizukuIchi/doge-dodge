@@ -22,7 +22,7 @@ let items;
 
 // game configuration
 const INIT_BULLET_SPEED_RATE = 1;
-const INIT_FRAMES_EVERY_BULLET = 10;
+const INIT_FRAMES_EVERY_BULLET = 7;
 const INIT_BULLET_MAX_SPEED = 8;
 const INIT_BULLET_MIN_SPEED = 8;
 const BULLET_WIDTH = 15;
@@ -132,7 +132,7 @@ function setup() {
   textAlign(LEFT, TOP);
   textSize(20);
   map = mapChanger(1000);
-  Array.prototype.pick = function() {
+  Array.prototype.pick = function () {
     return this[Math.floor(random(0, this.length))];
   };
 }
@@ -175,7 +175,6 @@ function draw() {
     bullets.showNext();
     items.showNext();
     let bulletCollision = checkCharacterCollision()
-    console.log(bulletCollision.length)
     if (bulletCollision.length > 0) {
       listeners.emitEvent({
         type: "hit",
@@ -210,17 +209,32 @@ function addBarrages() {
   }
 }
 function addItems() {
-  if (scoreCount % 2500 === 0) {
+  if (!scoreCount) {
     listeners.emitEvent({
       type: "addItem",
-      item: new Life()
+      item: new Sick()
+    });
+    return
+  }
+  if (scoreCount % 750 === 0) {
+    listeners.emitEvent({
+      type: "addItem",
+      item: new (itemTypes.pick())(.2)
+    });
+    listeners.emitEvent({
+      type: "addItem",
+      item: new (itemTypes.pick())(.5)
+    });
+    listeners.emitEvent({
+      type: "addItem",
+      item: new (itemTypes.pick())(.8)
     });
   }
 }
 function mapChanger(interval) {
   let mapPlugin = "";
   let timer, reverseTimer;
-  return function() {
+  return function () {
     if (scoreCount && scoreCount % interval === 0) {
       addSpeedHint.play();
       mapPlugin = mapPlugins[floor(random(0, mapPlugins.length))];

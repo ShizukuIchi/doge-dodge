@@ -7,7 +7,7 @@ class Character {
     this.h = CHARACTER_HEIGHT;
     this.xspeed = 0;
     this.yspeed = CHARACTER_SPEED;
-    this.lives = 1;
+    this.lives = 2;
     this.status = "normal";
     this.isInvincible = false;
     this.click2Move = 0
@@ -22,6 +22,9 @@ class Character {
       case 'stunned':
         if (!this.click2Move) this.status = 'normal'
         break
+      case 'sicked':
+        this.x += this.xspeed;
+        this.y += this.yspeed*random();
       default:
         this.x += this.xspeed;
         this.y += this.yspeed;
@@ -58,25 +61,31 @@ class Character {
         this.yspeed = -this.yspeed;
     }
   }
+  say(s) {
+    stroke(255)
+    strokeWeight(1)
+    textSize(15)
+    fill(255)
+    text(s, this.x + this.w, this.y - 10)
+  }
   show() {
+    switch (this.status) {
+      case 'stunned':
+        this.say(this.click2Move)
+        break
+      case 'sicked':
+        this.say('Bluuuh!')
+        break
+      case 'slow':
+        this.say('so slow...')
+        break
+      }
     if (this.isInvincible) {
       tint(255, 125);
       image(characterImg, this.x, this.y, this.w, this.h);
       tint(255, 255);
       return
     }
-    switch (this.status) {
-      case 'normal':
-        image(characterImg, this.x, this.y, this.w, this.h);
-        break
-      case 'stunned':
-        stroke(255)
-        strokeWeight(1)
-        textSize(15)
-        fill(255)
-        text(this.click2Move, this.x + this.w, this.y - 10)
-        image(characterImg, this.x, this.y, this.w, this.h);
-        break
-    }
+    image(characterImg, this.x, this.y, this.w, this.h);
   }
 }
