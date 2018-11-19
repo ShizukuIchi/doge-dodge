@@ -136,11 +136,16 @@ body {
   margin-bottom: 8px;
   display: flex;
 }
-.menu .pinkball {
+.menu .ball {
   width: 20px;
   height: 20px;
   border-radius: 50%;
+}
+.pink {
   background: pink;
+}
+.purple {
+  background: purple;
 }
 .menu .bullet {
   width: 20px;

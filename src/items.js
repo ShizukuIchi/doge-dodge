@@ -50,3 +50,18 @@ class Life extends Item {
     ellipse(this.x, this.y, this.w);
   }
 }
+class Stun extends Item {
+  constructor() {
+    super();
+    this.durability = 10
+  }
+  effect() {
+    character.status = 'stunned'
+    character.click2Move = 10
+  }
+  show() {
+    noStroke();
+    fill("purple");
+    ellipse(this.x, this.y, this.w);
+  }
+}

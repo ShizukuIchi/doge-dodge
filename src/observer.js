@@ -73,8 +73,9 @@ function addItemHandler({ item }) {
   items.add(item);
 }
 function hitHandler({ bullets }) {
+  if (character.isInvincible) return
   switch (character.status) {
-    case 'normal':
+    default:
       character.lives -= 1;
       character.setStatus("slow", 2000);
       character.setInvincible(2000);
@@ -82,7 +83,6 @@ function hitHandler({ bullets }) {
         type: 'mapColor',
         color: [255, 0, 0]
       })
-      break
   }
 }
 

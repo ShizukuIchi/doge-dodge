@@ -175,6 +175,7 @@ function draw() {
     bullets.showNext();
     items.showNext();
     let bulletCollision = checkCharacterCollision()
+    console.log(bulletCollision.length)
     if (bulletCollision.length > 0) {
       listeners.emitEvent({
         type: "hit",
@@ -271,7 +272,6 @@ function remainsLivesString() {
   return s;
 }
 function checkCharacterCollision() {
-  if (character.isInvincible) return [];
   return bullets.countCollisions(character);
 }
 function isColliding(a, b, boundary) {
