@@ -20,6 +20,12 @@ class Bullets {
     });
     return collision;
   }
+  checkClose(stuff) {
+    for (let i = this.bullets.length - 1; i >= 0; i -= 1) {
+      if (isColliding(this.bullets[i], stuff, -1)) return true
+    }
+    return false
+  }
   clear() {
     this.bullets = [];
   }

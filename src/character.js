@@ -100,6 +100,8 @@ class Character {
         return 'too fast!!!'
       case 'good':
         return 'yummy ^_^'
+      case 'dead':
+        return 'oh no'
       default:
         return 'something wrong..'
     }

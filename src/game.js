@@ -128,13 +128,8 @@ function draw() {
         type: "hit",
         bullets: bulletCollision
       });
-    }
-    if (character.lives <= 0) {
-      drawGameOver();
-      fetch(`${location.href}score?score=${scoreCount}`);
-      characterSound.play();
-      status = "stopped";
-      noLoop(); // stop loop
+    } else if (bullets.checkClose(character)) {
+      // lucky
     }
     scoreCount += 1;
   }

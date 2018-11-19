@@ -84,6 +84,15 @@ function hitHandler({ bullets }) {
         color: [255, 0, 0]
       })
   }
+  if (character.lives <= 0) {
+    character.status = 'dead'
+    character.speech()
+    drawGameOver();
+    fetch(`${location.href}score?score=${scoreCount}`);
+    characterSound.play();
+    status = "stopped";
+    noLoop(); // stop loop
+  }
 }
 
 function handler(evt) {

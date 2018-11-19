@@ -133,7 +133,12 @@ body {
   margin: 8px 0 8px 0;
   background: rgb(210,210,210);
 }
+.menu .items {
+  display: flex;
+  flex-wrap: wrap;
+}
 .menu .item {
+  flex-basis: 50%;
   font-size: 18px;
   margin-bottom: 8px;
   display: flex;
@@ -154,6 +159,12 @@ body {
 }
 .orange {
   background: orange;
+}
+.brown {
+  background: brown;
+}
+.burlywood {
+  background: burlywood;
 }
 .menu .bullet {
   width: 20px;
