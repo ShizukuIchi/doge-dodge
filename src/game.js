@@ -109,7 +109,6 @@ function pause() {
   }
 }
 
-// invoke every frame by loop function
 function draw() {
   if (status === "started") {
     background(...mapColor);
@@ -129,9 +128,18 @@ function draw() {
         bullets: bulletCollision
       });
     } else if (bullets.checkClose(character)) {
-      // lucky
+      if (!character.isInvincible)
+        character.setStatus('lucky', 500)
     }
-    scoreCount += 1;
+    character.speak()
+    if (character.status === 'dead') {
+      drawGameOver();
+      fetch(`${location.href}score?score=${scoreCount}`);
+      status = "stopped";
+      noLoop()
+    } else {
+      scoreCount += 1;
+    }
   }
 }
 

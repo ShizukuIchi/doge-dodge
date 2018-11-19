@@ -44,12 +44,14 @@ class Character {
       this.yspeed = -this.yspeed;
     }
   }
-  setStatus(status, ms = 2000) {
+  setStatus(status, ms) {
     this.status = status;
-    setTimeout(() => {
-      if (this.status === status)
-        this.status = "normal";
-    }, ms);
+    if (ms) {
+      setTimeout(() => {
+        if (this.status === status)
+          this.status = "normal";
+      }, ms);
+    }
   }
   setInvincible(ms = 2000) {
     this.isInvincible = true;
@@ -73,7 +75,7 @@ class Character {
         this.yspeed = -this.yspeed;
     }
   }
-  speech() {
+  speak() {
     stroke(255)
     strokeWeight(1)
     textSize(15)
@@ -96,18 +98,21 @@ class Character {
         return 'Bluuuh!'
       case 'big':
         return 'Mario!'
+      case 'small':
+        return 'Can you see me?'
       case 'fast':
         return 'too fast!!!'
       case 'good':
         return 'yummy ^_^'
+      case 'lucky':
+        return 'not even close'
       case 'dead':
-        return 'oh no'
+        return 'Oh no!'
       default:
         return 'something wrong..'
     }
   }
   show() {
-    this.speech()
     if (this.isInvincible) {
       tint(255, 125);
       image(characterImg, this.x, this.y, this.w, this.h);

@@ -74,25 +74,20 @@ function addItemHandler({ item }) {
 }
 function hitHandler({ bullets }) {
   if (character.isInvincible) return
-  switch (character.status) {
-    default:
-      character.lives -= 1;
-      character.setStatus("slow", 2000);
-      character.setInvincible(2000);
-      listeners.emitEvent({
-        type: 'mapColor',
-        color: [255, 0, 0]
-      })
-  }
+  character.lives -= 1;
   if (character.lives <= 0) {
-    character.status = 'dead'
-    character.speech()
-    drawGameOver();
-    fetch(`${location.href}score?score=${scoreCount}`);
+    character.setStatus('dead')
+    character.speechText = ''
     characterSound.play();
-    status = "stopped";
-    noLoop(); // stop loop
+    return
   }
+  character.setStatus("slow", 2000);
+  character.setInvincible(2000);
+  listeners.emitEvent({
+    type: 'mapColor',
+    color: [255, 0, 0]
+  })
+  
 }
 
 function handler(evt) {
