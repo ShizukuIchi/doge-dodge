@@ -129,7 +129,9 @@ body {
   box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.5);
 }
 .menu .sep {
-  height: 10px;
+  height: 1px;
+  margin: 8px 0 8px 0;
+  background: rgb(210,210,210);
 }
 .menu .item {
   font-size: 18px;
@@ -150,12 +152,15 @@ body {
 .green {
   background: green;
 }
+.orange {
+  background: orange;
+}
 .menu .bullet {
   width: 20px;
   height: 10px;
   transform: translateY(5px);
   border-radius: 10px;
-  background: red;
+  background: #000;
 }
 
 @keyframes turnZ1 {

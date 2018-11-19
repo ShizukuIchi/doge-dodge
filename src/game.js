@@ -27,7 +27,7 @@ const INIT_BULLET_MAX_SPEED = 8;
 const INIT_BULLET_MIN_SPEED = 8;
 const BULLET_WIDTH = 15;
 const BULLET_HEIGHT = 10;
-const COLLISION_BOUNDARY = 0;
+const COLLISION_BOUNDARY = 1;
 const CHARACTER_WIDTH = 35;
 const CHARACTER_HEIGHT = 35;
 const CHARACTER_SPEED = 6;
@@ -128,7 +128,7 @@ function setup() {
   textFont(font);
   textAlign(CENTER, CENTER);
   textSize(80);
-  text("閃避（點擊）\n暫停（P）\n開始（空白鍵）", width * 0.5, height * 0.5);
+  text("控制（左鍵）\n開始（空白鍵）", width * 0.5+40, height * 0.5);
   textAlign(LEFT, TOP);
   textSize(20);
   map = mapChanger(1000);
@@ -212,7 +212,7 @@ function addItems() {
   if (!scoreCount) {
     listeners.emitEvent({
       type: "addItem",
-      item: new Sick()
+      item: new Fast()
     });
     return
   }

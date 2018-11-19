@@ -11,7 +11,7 @@ class Character {
     this.status = "normal";
     this.isInvincible = false;
     this.click2Move = 0
-    this.speech = ''
+    this.speechText = ''
   }
 
   update() {
@@ -25,7 +25,12 @@ class Character {
         break
       case 'sicked':
         this.x += this.xspeed;
-        this.y += this.yspeed*random();
+        this.y += this.yspeed*random()*2;
+        break;
+      case 'fast':
+        this.x += this.xspeed;
+        this.y += this.yspeed*2.3;
+        break;
       default:
         this.x += this.xspeed;
         this.y += this.yspeed;
@@ -54,10 +59,10 @@ class Character {
     }, ms);
   }
   setSpeech(s) {
-    if(this.speech.length) return
-    this.speech = s
+    if(this.speechText.length) return
+    this.speechText = s
     setTimeout(() => {
-      this.speech = ''
+      this.speechText = ''
     }, 2000);
   }
   changeDirection() {
@@ -76,27 +81,37 @@ class Character {
     fill(255)
     text(s, this.x + this.w, this.y - 10)
   }
-  speeching() {
-    if(!this.speech.length) return
+  speech() {
     stroke(255)
     strokeWeight(1)
     textSize(15)
     fill(255)
-    text(this.speech, this.x + this.w, this.y+20)
+    let statusText = this.textFromStatus()
+    if(statusText.length)
+      text(statusText, this.x + this.w, this.y - 10)
+    if(this.speechText.length)
+      text(this.speechText, this.x + this.w, this.y+20)
+  }
+  textFromStatus() {
+    switch (this.status) {
+      case 'normal':
+        return ''
+      case 'stunned':
+        return this.click2Move
+      case 'sicked':
+        return 'Bluuuh!'
+      case 'slow':
+        return 'so slow...'
+      case 'fast':
+        return 'too fast!!!'
+      case 'good':
+        return 'yumny~ ^_^'
+      default:
+        return 'something wrong..'
+    }
   }
   show() {
-    this.speeching()
-    switch (this.status) {
-      case 'stunned':
-        this.say(this.click2Move)
-        break
-      case 'sicked':
-        this.say('Bluuuh!')
-        break
-      case 'slow':
-        this.say('so slow...')
-        break
-      }
+    this.speech()
     if (this.isInvincible) {
       tint(255, 125);
       image(characterImg, this.x, this.y, this.w, this.h);

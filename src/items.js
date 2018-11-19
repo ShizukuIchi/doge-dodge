@@ -45,6 +45,7 @@ class Life extends Item {
   }
   effect() {
     character.lives += 1;
+    character.setStatus('good', 2000)
   }
   show() {
     fill("pink");
@@ -100,5 +101,19 @@ class Sick extends Item {
     ellipse(this.x, this.y, this.w);
   }
 }
+class Fast extends Item {
+  constructor(y = 0.5) {
+    super();
+    this.y = height*y
+  }
+  effect() {
+    character.setStatus('fast', 5000)
+  }
+  show() {
+    noStroke();
+    fill("orange");
+    ellipse(this.x, this.y, this.w);
+  }
+}
 
-const itemTypes = [Life, Stun, Sick, Unknown] 
+const itemTypes = [Life, Stun, Sick, Unknown, Fast] 
