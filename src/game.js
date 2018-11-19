@@ -271,6 +271,12 @@ function mouseClicked(e) {
     character.changeDirection();
   }
 }
+function mousePressed(e) {
+  if (e.which === 3　&& status === "started") {
+    character.setSpeech(document.querySelector('#taunt').value)
+  }
+}
+window.oncontextmenu = () => false
 function touchStarted() {
   if (screen.width >= 768) return;
   if (status === "started") {

@@ -11,6 +11,7 @@ class Character {
     this.status = "normal";
     this.isInvincible = false;
     this.click2Move = 0
+    this.speech = ''
   }
 
   update() {
@@ -52,6 +53,13 @@ class Character {
       this.isInvincible = false;
     }, ms);
   }
+  setSpeech(s) {
+    if(this.speech.length) return
+    this.speech = s
+    setTimeout(() => {
+      this.speech = ''
+    }, 2000);
+  }
   changeDirection() {
     switch (this.status) {
       case 'stunned':
@@ -68,7 +76,16 @@ class Character {
     fill(255)
     text(s, this.x + this.w, this.y - 10)
   }
+  speeching() {
+    if(!this.speech.length) return
+    stroke(255)
+    strokeWeight(1)
+    textSize(15)
+    fill(255)
+    text(this.speech, this.x + this.w, this.y+20)
+  }
   show() {
+    this.speeching()
     switch (this.status) {
       case 'stunned':
         this.say(this.click2Move)
