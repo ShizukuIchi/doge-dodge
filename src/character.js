@@ -7,7 +7,7 @@ class Character {
     this.h = CHARACTER_HEIGHT;
     this.xspeed = 0;
     this.yspeed = CHARACTER_SPEED;
-    this.lives = 2;
+    this.lives = 1;
     this.status = "normal";
     this.isInvincible = false;
     this.click2Move = 0
@@ -25,11 +25,11 @@ class Character {
         break
       case 'sicked':
         this.x += this.xspeed;
-        this.y += this.yspeed*random()*2;
+        this.y += this.yspeed * random() * 2;
         break;
       case 'fast':
         this.x += this.xspeed;
-        this.y += this.yspeed*2.3;
+        this.y += this.yspeed * 2.3;
         break;
       default:
         this.x += this.xspeed;
@@ -44,13 +44,12 @@ class Character {
       this.yspeed = -this.yspeed;
     }
   }
-  setStatus(status, ms = 0) {
+  setStatus(status, ms = 2000) {
     this.status = status;
-    if (ms) {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (this.status === status)
         this.status = "normal";
-      }, ms);
-    }
+    }, ms);
   }
   setInvincible(ms = 2000) {
     this.isInvincible = true;
@@ -59,7 +58,7 @@ class Character {
     }, ms);
   }
   setSpeech(s) {
-    if(this.speechText.length) return
+    if (this.speechText.length) return
     this.speechText = s
     setTimeout(() => {
       this.speechText = ''
@@ -74,38 +73,33 @@ class Character {
         this.yspeed = -this.yspeed;
     }
   }
-  say(s) {
-    stroke(255)
-    strokeWeight(1)
-    textSize(15)
-    fill(255)
-    text(s, this.x + this.w, this.y - 10)
-  }
   speech() {
     stroke(255)
     strokeWeight(1)
     textSize(15)
     fill(255)
     let statusText = this.textFromStatus()
-    if(statusText.length)
+    if (statusText.length)
       text(statusText, this.x + this.w, this.y - 10)
-    if(this.speechText.length)
-      text(this.speechText, this.x + this.w, this.y+20)
+    if (this.speechText.length)
+      text(this.speechText, this.x + this.w, this.y + 20)
   }
   textFromStatus() {
     switch (this.status) {
       case 'normal':
         return ''
+      case 'slow':
+        return 'so slow...'
       case 'stunned':
         return String(this.click2Move)
       case 'sicked':
         return 'Bluuuh!'
-      case 'slow':
-        return 'so slow...'
+      case 'big':
+        return 'Mario!'
       case 'fast':
         return 'too fast!!!'
       case 'good':
-        return 'yumny~ ^_^'
+        return 'yummy ^_^'
       default:
         return 'something wrong..'
     }

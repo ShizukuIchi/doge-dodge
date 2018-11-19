@@ -41,7 +41,7 @@ class Item {
 class Life extends Item {
   constructor(y = 0.5) {
     super();
-    this.y = height*y
+    this.y = height * y
   }
   effect() {
     character.lives += 1;
@@ -56,11 +56,11 @@ class Life extends Item {
 class Stun extends Item {
   constructor(y = 0.5) {
     super();
-    this.y = height*y
+    this.y = height * y
   }
   effect() {
     character.status = 'stunned'
-    character.click2Move = 10
+    character.click2Move = 5
   }
   show() {
     noStroke();
@@ -72,7 +72,7 @@ class Stun extends Item {
 class Unknown extends Item {
   constructor(y = 0.5) {
     super()
-    this.y = height*y
+    this.y = height * y
   }
   effect() {
     itemTypes.pick().prototype.effect()
@@ -82,7 +82,7 @@ class Unknown extends Item {
     strokeWeight(2)
     textSize(25)
     fill(255)
-    text('?', this.x-6, this.y-20)
+    text('?', this.x - 6, this.y - 20)
     noFill()
     ellipse(this.x, this.y, this.w);
   }
@@ -90,7 +90,7 @@ class Unknown extends Item {
 class Sick extends Item {
   constructor(y = 0.5) {
     super();
-    this.y = height*y
+    this.y = height * y
   }
   effect() {
     character.setStatus('sicked', 5000)
@@ -104,7 +104,7 @@ class Sick extends Item {
 class Fast extends Item {
   constructor(y = 0.5) {
     super();
-    this.y = height*y
+    this.y = height * y
   }
   effect() {
     character.setStatus('fast', 5000)
@@ -115,5 +115,53 @@ class Fast extends Item {
     ellipse(this.x, this.y, this.w);
   }
 }
+class Grow extends Item {
+  constructor(y = 0.5) {
+    super();
+    this.y = height * y
+  }
+  effect() {
+    character.h = CHARACTER_HEIGHT + 8
+    character.w = CHARACTER_WIDTH + 8
+    character.x -= 4
+    character.y -= 4
+    setTimeout(() => {
+      character.w = CHARACTER_WIDTH
+      character.h = CHARACTER_HEIGHT
+      character.x += 4
+      character.y += 4
+    }, 5000)
+    character.setStatus('big', 5000)
+  }
+  show() {
+    noStroke();
+    fill("brown");
+    ellipse(this.x, this.y, this.w);
+  }
+}
+class Shrink extends Item {
+  constructor(y = 0.5) {
+    super();
+    this.y = height * y
+  }
+  effect() {
+    character.h = CHARACTER_HEIGHT - 16
+    character.w = CHARACTER_WIDTH - 16
+    character.x += 8
+    character.y += 8
+    setTimeout(() => {
+      character.w = CHARACTER_WIDTH
+      character.h = CHARACTER_HEIGHT
+      character.x -= 8
+      character.y -= 8
+    }, 5000)
+    character.setStatus('small', 5000)
+  }
+  show() {
+    noStroke();
+    fill("burlywood");
+    ellipse(this.x, this.y, this.w);
+  }
+}
 
-const itemTypes = [Life, Stun, Sick, Unknown, Fast] 
+const itemTypes = [Life, Stun, Sick, Unknown, Fast, Grow, Shrink] 

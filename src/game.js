@@ -14,7 +14,6 @@ let bulletMinSpeed;
 let bulletSound;
 let font;
 let barrages;
-let plugins;
 let game;
 let map;
 let mapColor;
@@ -62,58 +61,6 @@ function setup() {
   items = new Items();
   mapColor = INIT_MAP_COLOR;
   characterImg = loadImage(CHARACTER_IMG_SRC);
-  plugins = [
-    {
-      fn: genOneHole,
-      arguments: [150],
-      stopTill: [1]
-    },
-    {
-      fn: genWave,
-      arguments: [200, 190, 180],
-      stopTill: [130, 140, 150]
-    },
-    {
-      fn: genStopper,
-      arguments: [120, 135, 150],
-      stopTill: [3, 4]
-    },
-    {
-      fn: genBigChase,
-      arguments: [2.1, 2.3, 2.5],
-      stopTill: [1]
-    },
-    {
-      fn: genSlowChaser,
-      arguments: [0],
-      stopTill: [1]
-    },
-    {
-      fn: genVanisher,
-      arguments: [0],
-      stopTill: [5, 6, 7]
-    },
-    {
-      fn: genAccelerator,
-      arguments: [2],
-      stopTill: [5, 6, 7]
-    },
-    {
-      fn: genRandomer,
-      arguments: [0.6, 0.5, 0.45],
-      stopTill: [5, 6, 7]
-    },
-    {
-      fn: genPlumber,
-      arguments: [0.33],
-      stopTill: [1]
-    },
-    {
-      fn: genCrosser,
-      arguments: [0],
-      stopTill: [5]
-    }
-  ];
   mapPlugins = ["turnX", "turnY", "turnZ1", "turnZ2", "turnZ3"];
   status = "stopped";
   if (!localStorage.getItem("highest")) {
@@ -128,7 +75,7 @@ function setup() {
   textFont(font);
   textAlign(CENTER, CENTER);
   textSize(80);
-  text("控制（左鍵）\n開始（空白鍵）", width * 0.5+40, height * 0.5);
+  text("控制（左鍵）\n開始（空白鍵）", width * 0.5 + 40, height * 0.5);
   textAlign(LEFT, TOP);
   textSize(20);
   map = mapChanger(1000);
@@ -199,7 +146,7 @@ function addBarrages() {
   // }
   if (!scoreCount) return;
   if (scoreCount % 250 === 0) {
-    let barrage = plugins.pick();
+    let barrage = barrageTypes.pick();
     let arg = barrage.arguments.pick();
     let stopTill = barrage.stopTill.pick();
     listeners.emitEvent({
@@ -213,7 +160,7 @@ function addItems() {
   if (!scoreCount) {
     listeners.emitEvent({
       type: "addItem",
-      item: new Fast()
+      item: new Life()
     });
     return
   }
@@ -273,7 +220,7 @@ function mouseClicked(e) {
   }
 }
 function mousePressed(e) {
-  if (e.which === 3　&& status === "started") {
+  if (e.which === 3 && status === "started") {
     character.setSpeech(document.querySelector('#taunt').value)
   }
 }
