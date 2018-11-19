@@ -109,9 +109,6 @@ function combineEpics(...epics) {
 function ofType(...types) {
   return filter(evt => types.includes(evt.type));
 }
-function notOfBarrage(name) {
-  return filter(evt => evt.barrage.name !== name);
-}
 function ofBarrage(...names) {
   return filter(evt => {
     let name = evt.barrage.name;
