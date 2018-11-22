@@ -160,22 +160,22 @@ function addBarrages() {
 }
 function addItems() {
   if (!scoreCount) {
-    listeners.emitEvent({
+    dispatch({
       type: 'addItem',
       item: new Life(),
     });
     return;
   }
   if (scoreCount % 750 === 0) {
-    listeners.emitEvent({
+    dispatch({
       type: 'addItem',
       item: new (itemTypes.pick())(0.2),
     });
-    listeners.emitEvent({
+    dispatch({
       type: 'addItem',
       item: new (itemTypes.pick())(0.5),
     });
-    listeners.emitEvent({
+    dispatch({
       type: 'addItem',
       item: new (itemTypes.pick())(0.8),
     });

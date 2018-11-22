@@ -69,7 +69,7 @@ function hitHandler({ bullets }) {
   }
   character.setStatus("slow", 2000);
   character.setInvincible(2000);
-  listeners.emitEvent({
+  dispatch({
     type: 'mapColor',
     color: [255, 0, 0]
   })
