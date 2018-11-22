@@ -172,9 +172,7 @@ function draw() {
     bullets.showNext();
     if (checkCharacterCollision() > 0) {
       character.lives -= 1;
-      listeners.emitEvent({
-        type: 'hit',
-      });
+      dispatch({ type: 'hit' });
       character.setStatus('slow', 2000);
       character.setInvincible(2000);
     }
@@ -194,7 +192,7 @@ function addBarrages() {
     let barrage = plugins.pick();
     let arg = barrage.arguments.pick();
     let stopTill = barrage.stopTill.pick();
-    listeners.emitEvent({
+    dispatch({
       type: 'add',
       barrage: barrage.fn(arg),
       till: scoreCount + stopTill,

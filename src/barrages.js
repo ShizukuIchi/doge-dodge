@@ -17,7 +17,7 @@ class Barrages {
   generate() {
     this.barrages.forEach(barrage => {
       if (barrage.stopScore > 0 && barrage.stopScore + 1 <= scoreCount) {
-        listeners.emitEvent({ type: 'remove', barrage: barrage.fn });
+        dispatch({ type: 'remove', barrage: barrage.fn });
       } else {
         barrage.fn();
       }

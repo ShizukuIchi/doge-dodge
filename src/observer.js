@@ -1,27 +1,5 @@
-const { Observable, merge } = rxjs;
+const { Observable, merge, Subject } = rxjs;
 const { mapTo, filter, delay } = rxjs.operators;
-
-function RxFromListeners(listeners) {
-  return Observable.create(observer => {
-    listeners.addListener(data => {
-      observer.next(data);
-    });
-  });
-}
-
-class Listeners {
-  constructor() {
-    this.listeners = [];
-  }
-  addListener(cb) {
-    this.listeners.push(cb);
-  }
-  emitEvent(data) {
-    this.listeners.forEach(cb => cb(data));
-  }
-}
-const listeners = new Listeners();
-const $event = RxFromListeners(listeners);
 
 const rootEpic = combineEpics(
   addLongBarrageEpic,
@@ -29,8 +7,16 @@ const rootEpic = combineEpics(
   removeLongBarrageEpic,
   shineRedEpic,
 );
-$event.subscribe(handler);
-rootEpic($event).subscribe(handler);
+
+const $eventEmitter = new Subject();
+function dispatch(evt) {
+  $eventEmitter.next(evt);
+}
+const observer = {
+  next: handler,
+};
+$eventEmitter.subscribe(observer);
+rootEpic($eventEmitter).subscribe(observer);
 
 function addLongBarrageEpic($event) {
   return $event.pipe(
