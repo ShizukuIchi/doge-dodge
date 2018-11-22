@@ -14,19 +14,19 @@ let bulletMinSpeed;
 let bulletSound;
 let font;
 let barrages;
-let plugins;
 let game;
 let map;
 let mapColor;
+let items;
 
 // game configuration
 const INIT_BULLET_SPEED_RATE = 1;
-const INIT_FRAMES_EVERY_BULLET = 10;
+const INIT_FRAMES_EVERY_BULLET = 7;
 const INIT_BULLET_MAX_SPEED = 8;
 const INIT_BULLET_MIN_SPEED = 8;
 const BULLET_WIDTH = 15;
 const BULLET_HEIGHT = 10;
-const COLLISION_BOUNDARY = 0;
+const COLLISION_BOUNDARY = 1;
 const CHARACTER_WIDTH = 35;
 const CHARACTER_HEIGHT = 35;
 const CHARACTER_SPEED = 6;
@@ -58,60 +58,9 @@ function setup() {
   background(...INIT_MAP_COLOR);
   barrages = new Barrages();
   bullets = new Bullets();
+  items = new Items();
   mapColor = INIT_MAP_COLOR;
   characterImg = loadImage(CHARACTER_IMG_SRC);
-  plugins = [
-    {
-      fn: genOneHole,
-      arguments: [150],
-      stopTill: [1],
-    },
-    {
-      fn: genWave,
-      arguments: [200, 190, 180],
-      stopTill: [130, 140, 150],
-    },
-    {
-      fn: genStopper,
-      arguments: [120, 135, 150],
-      stopTill: [3, 4],
-    },
-    {
-      fn: genBigChase,
-      arguments: [2.1, 2.3, 2.5],
-      stopTill: [1],
-    },
-    {
-      fn: genSlowChaser,
-      arguments: [0],
-      stopTill: [1],
-    },
-    {
-      fn: genVanisher,
-      arguments: [0],
-      stopTill: [5, 6, 7],
-    },
-    {
-      fn: genAccelerator,
-      arguments: [2],
-      stopTill: [5, 6, 7],
-    },
-    {
-      fn: genRandomer,
-      arguments: [0.6, 0.5, 0.45],
-      stopTill: [5, 6, 7],
-    },
-    {
-      fn: genPlumber,
-      arguments: [0.33],
-      stopTill: [1],
-    },
-    {
-      fn: genCrosser,
-      arguments: [0],
-      stopTill: [5],
-    },
-  ];
   mapPlugins = ['turnX', 'turnY', 'turnZ1', 'turnZ2', 'turnZ3'];
   status = 'stopped';
   if (!localStorage.getItem('highest')) {
@@ -126,7 +75,7 @@ function setup() {
   textFont(font);
   textAlign(CENTER, CENTER);
   textSize(80);
-  text('閃避（點擊）\n暫停（P）\n開始（空白鍵）', width * 0.5, height * 0.5);
+  text('控制（左鍵）\n開始（空白鍵）', width * 0.5 + 40, height * 0.5);
   textAlign(LEFT, TOP);
   textSize(20);
   map = mapChanger(1000);
@@ -140,6 +89,7 @@ function reset() {
   map = mapChanger(1000);
   barrages.clear();
   bullets.clear();
+  items.clear();
   character = new Character();
   scoreCount = 0;
   status = 'started';
@@ -159,7 +109,6 @@ function pause() {
   }
 }
 
-// invoke every frame by loop function
 function draw() {
   if (status === 'started') {
     background(...mapColor);
@@ -167,35 +116,68 @@ function draw() {
     character.update();
     character.show();
     addBarrages();
+    addItems();
     drawScore();
     map();
     bullets.showNext();
-    if (checkCharacterCollision() > 0) {
-      character.lives -= 1;
-      dispatch({ type: 'hit' });
-      character.setStatus('slow', 2000);
-      character.setInvincible(2000);
+    items.showNext();
+    let bulletCollision = checkCharacterCollision();
+    if (bulletCollision.length > 0) {
+      dispatch({
+        type: 'hit',
+        bullets: bulletCollision,
+      });
+    } else if (bullets.checkClose(character)) {
+      if (!character.isInvincible) character.setStatus('lucky', 500);
     }
-    if (character.lives <= 0) {
+    character.speak();
+    if (character.status === 'dead') {
       drawGameOver();
       fetch(`${location.href}score?score=${scoreCount}`);
-      characterSound.play();
       status = 'stopped';
-      noLoop(); // stop loop
+      noLoop();
+    } else {
+      scoreCount += 1;
     }
-    scoreCount += 1;
   }
 }
 
 function addBarrages() {
-  if (scoreCount && scoreCount % 250 === 0) {
-    let barrage = plugins.pick();
+  // if (scoreCount === 1) {
+  // barrages.add(fn, 5);
+  // }
+  if (!scoreCount) return;
+  if (scoreCount % 250 === 0) {
+    let barrage = barrageTypes.pick();
     let arg = barrage.arguments.pick();
     let stopTill = barrage.stopTill.pick();
     dispatch({
       type: 'add',
       barrage: barrage.fn(arg),
       till: scoreCount + stopTill,
+    });
+  }
+}
+function addItems() {
+  if (!scoreCount) {
+    listeners.emitEvent({
+      type: 'addItem',
+      item: new Life(),
+    });
+    return;
+  }
+  if (scoreCount % 750 === 0) {
+    listeners.emitEvent({
+      type: 'addItem',
+      item: new (itemTypes.pick())(0.2),
+    });
+    listeners.emitEvent({
+      type: 'addItem',
+      item: new (itemTypes.pick())(0.5),
+    });
+    listeners.emitEvent({
+      type: 'addItem',
+      item: new (itemTypes.pick())(0.8),
     });
   }
 }
@@ -207,11 +189,12 @@ function mapChanger(interval) {
       addSpeedHint.play();
       mapPlugin = mapPlugins[floor(random(0, mapPlugins.length))];
       timer = setTimeout(() => {
-        if (status === 'started') changeMap(mapPlugin);
+        if (status === 'started' && scoreCount > interval) changeMap(mapPlugin);
         else clearTimeout(timer);
       }, 1800);
       reverseTimer = setTimeout(() => {
-        if (status === 'started') changeMap(mapPlugin + '-r');
+        if (status === 'started' && scoreCount > interval)
+          changeMap(mapPlugin + '-r');
         else clearTimeout(reverseTimer);
       }, 8000);
     }
@@ -238,6 +221,12 @@ function mouseClicked(e) {
     character.changeDirection();
   }
 }
+function mousePressed(e) {
+  if (e.which === 3 && status === 'started') {
+    character.setSpeech(document.querySelector('#taunt').value);
+  }
+}
+window.oncontextmenu = () => false;
 function touchStarted() {
   if (screen.width >= 768) return;
   if (status === 'started') {
@@ -253,7 +242,6 @@ function remainsLivesString() {
   return s;
 }
 function checkCharacterCollision() {
-  if (character.isInvincible) return 0;
   return bullets.countCollisions(character);
 }
 function isColliding(a, b, boundary) {
@@ -285,6 +273,7 @@ function drawGameOver() {
   }
 }
 function setupText() {
+  fill(255);
   stroke(255);
   strokeWeight(1);
   textSize(20);

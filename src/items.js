@@ -1,3 +1,4 @@
+
 class Items {
   constructor() {
     this.items = [];
@@ -5,20 +6,16 @@ class Items {
   add(item) {
     this.items.push(item);
   }
-  update() {
-    this.items.forEach(item => item.update());
-    this.clearDead();
-  }
-  judgeCollision(stuff) {
-    this.items.forEach(item => {
-      isColliding(item, stuff, COLLISION_BOUNDARY) ? item.effect() : null;
-    });
-  }
-  show() {
-    this.items.forEach(item => item.show());
-  }
-  clearDead() {
-    this.items = this.items.filter(item => item.x + item.w >= 0);
+  showNext() {
+    for (let i = this.items.length - 1; i >= 0; i -= 1) {
+      let item = this.items[i];
+      item.update();
+      item.show();
+      if (isColliding(item, character, COLLISION_BOUNDARY)) {
+        item.effect();
+        this.items.splice(i, 1);
+      } else if (item.x + item.w <= 0) this.items.splice(i, 1);
+    }
   }
   clear() {
     this.items = [];
@@ -28,13 +25,13 @@ class Item {
   constructor(x, y, w, h, xs, ys) {
     this.x = x || width;
     this.y = y || height / 2;
-    this.w = w || 20;
+    this.w = w || 40;
     this.h = h || 20;
-    this.xspeed = xs || -20;
+    this.xspeed = xs || -12;
     this.yspeed = ys || 0;
   }
   effect() {
-    console.log('item contact');
+    console.log("item contact");
   }
   update() {
     this.x += this.xspeed;
@@ -42,17 +39,129 @@ class Item {
   }
 }
 class Life extends Item {
-  constructor() {
+  constructor(y = 0.5) {
     super();
+    this.y = height * y
   }
   effect() {
-    console.log('life contact');
+    character.lives += 1;
+    character.setStatus('good', 2000)
   }
   show() {
-    console.log('show life');
+    fill("pink");
+    noStroke();
+    ellipse(this.x, this.y, this.w);
+  }
+}
+class Stun extends Item {
+  constructor(y = 0.5) {
+    super();
+    this.y = height * y
+  }
+  effect() {
+    character.status = 'stunned'
+    character.click2Move = 5
+  }
+  show() {
+    noStroke();
+    fill("purple");
+    ellipse(this.x, this.y, this.w);
   }
 }
 
-function life() {
-  items.add(new Life());
+class Unknown extends Item {
+  constructor(y = 0.5) {
+    super()
+    this.y = height * y
+  }
+  effect() {
+    itemTypes.pick().prototype.effect()
+  }
+  show() {
+    stroke(255)
+    strokeWeight(2)
+    textSize(25)
+    fill(255)
+    text('?', this.x - 6, this.y - 20)
+    noFill()
+    ellipse(this.x, this.y, this.w);
+  }
 }
+class Sick extends Item {
+  constructor(y = 0.5) {
+    super();
+    this.y = height * y
+  }
+  effect() {
+    character.setStatus('sicked', 5000)
+  }
+  show() {
+    noStroke();
+    fill("green");
+    ellipse(this.x, this.y, this.w);
+  }
+}
+class Fast extends Item {
+  constructor(y = 0.5) {
+    super();
+    this.y = height * y
+  }
+  effect() {
+    character.setStatus('fast', 5000)
+  }
+  show() {
+    noStroke();
+    fill("orange");
+    ellipse(this.x, this.y, this.w);
+  }
+}
+class Grow extends Item {
+  constructor(y = 0.5) {
+    super();
+    this.y = height * y
+  }
+  effect() {
+    character.h = CHARACTER_HEIGHT + 8
+    character.w = CHARACTER_WIDTH + 8
+    character.x -= 4
+    character.y -= 4
+    setTimeout(() => {
+      character.w = CHARACTER_WIDTH
+      character.h = CHARACTER_HEIGHT
+      character.x += 4
+      character.y += 4
+    }, 5000)
+    character.setStatus('big', 5000)
+  }
+  show() {
+    noStroke();
+    fill("brown");
+    ellipse(this.x, this.y, this.w);
+  }
+}
+class Shrink extends Item {
+  constructor(y = 0.5) {
+    super();
+    this.y = height * y
+  }
+  effect() {
+    character.h = CHARACTER_HEIGHT - 16
+    character.w = CHARACTER_WIDTH - 16
+    character.x += 8
+    character.y += 8
+    setTimeout(() => {
+      character.w = CHARACTER_WIDTH
+      character.h = CHARACTER_HEIGHT
+      character.x -= 8
+      character.y -= 8
+    }, 5000)
+    character.setStatus('small', 5000)
+  }
+  show() {
+    noStroke();
+    fill("burlywood");
+    ellipse(this.x, this.y, this.w);
+  }
+}
+
+const itemTypes = [Life, Stun, Sick, Unknown, Fast, Grow, Shrink] 

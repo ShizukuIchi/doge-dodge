@@ -12,24 +12,43 @@
     <div id="game"></div>
   </div>
   <div id="settings">
-    <button id="settings-inset">設定</button>
+    <button id="settings-inset">選項</button>
   </div>
   </div>
   <div id="menu" class="menu">
     <div class="menu-container">
-      <div class="difficulty">
-        背景音樂 <input type="checkbox" name="sound" id="sound" checked>
+      <div class="item">
+        背景音樂　<input type="checkbox" name="sound" id="sound" checked>
+      </div>
+      <div class="sep"></div>
+      <div class="item">遊戲說明</div>
+      <div class="items">
+        <div class="item"><div class="bullet"></div>：躲開它</div>
+        <div class="item"><div class="ball purple"></div>：捕獸夾</div>
+        <div class="item"><div class="ball pink"></div>：補血包</div>
+        <div class="item"><div class="ball green"></div>：難吃</div>
+        <div class="item"><div class="ball orange"></div>：興奮劑</div>
+        <div class="item"><div class="ball brown"></div>：長大大</div>
+        <div class="item"><div class="ball burlywood"></div>：縮小小</div>
+      </div>
+      <div class="sep"></div>
+      <div class="item">遊戲操作</div>
+      <div class="item">空白鍵：開始遊戲</div>
+      <div class="item">滑鼠左鍵：控制主角</div>
+      <div class="sep"></div>
+      <div class="item">
+        自訂挑釁：<input type="text" name="taunt" id="taunt" value="Bring it on.">
       </div>
     </div>
   </div>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.min.js'></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.sound.min.js'></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/6.3.3/rxjs.umd.min.js"></script>
-  <script src="plugin.js"></script>
   <script src="bullets.js"></script>
+  <script src="items.js"></script>
+  <script src="barrages.js"></script>
   <script src="observer.js"></script>
   <script src="character.js"></script>
-  <script src="barrages.js"></script>
   <script src='game.js'></script>
   <script src="settings.js"></script>
 </body>
