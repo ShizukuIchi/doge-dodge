@@ -60,7 +60,6 @@ body {
   height: 800px;
   box-shadow: 0 0 70px #000;
   background: rgb(51, 51, 51);
-  overflow: hidden;
 }
 
 .bold {
@@ -131,7 +130,7 @@ body {
 .menu .sep {
   height: 1px;
   margin: 8px 0 8px 0;
-  background: rgb(210,210,210);
+  background: rgb(210, 210, 210);
 }
 .menu .items {
   display: flex;

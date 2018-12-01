@@ -222,9 +222,25 @@ function mouseClicked(e) {
   }
 }
 function mousePressed(e) {
-  if (e.which === 3 && status === 'started') {
-    character.setSpeech(document.querySelector('#taunt').value);
+  if (status !== 'started') return;
+  switch (e.which) {
+    case 3:
+      character.setSpeech(document.querySelector('#taunt').value);
+      break;
+    case 1:
+      dispatch({
+        type: 'mousedown',
+      });
+      break;
+    default:
+      return;
   }
+}
+function mouseReleased() {
+  if (status !== 'started') return;
+  dispatch({
+    type: 'mouseup',
+  });
 }
 window.oncontextmenu = () => false;
 function touchStarted() {

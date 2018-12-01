@@ -10,21 +10,26 @@ class Bullets {
       let bullet = this.bullets[i];
       bullet.update();
       bullet.show();
-      if (bullet.x + bullet.w <= 0) this.bullets.splice(i, 1);
+      if (bullet.x + bullet.w <= 0 || bullet.x > width)
+        this.bullets.splice(i, 1);
     }
   }
   countCollisions(stuff) {
     let collision = [];
     this.bullets.forEach(bullet => {
-      if (isColliding(bullet, stuff, COLLISION_BOUNDARY)) collision.push(bullet)
+      if (isColliding(bullet, stuff, COLLISION_BOUNDARY))
+        collision.push(bullet);
     });
     return collision;
   }
+  changeUpdate(cb) {
+    this.bullets.forEach(bullet => (bullet.update = cb.bind(bullet)));
+  }
   checkClose(stuff) {
     for (let i = this.bullets.length - 1; i >= 0; i -= 1) {
-      if (isColliding(this.bullets[i], stuff, -3)) return true
+      if (isColliding(this.bullets[i], stuff, -3)) return true;
     }
-    return false
+    return false;
   }
   clear() {
     this.bullets = [];
@@ -46,7 +51,7 @@ class Bullet {
   }
 
   show() {
-    stroke("yellow");
+    stroke('yellow');
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
   }
@@ -120,7 +125,7 @@ class Stopper extends Bullet {
     this.y += this.yspeed;
   }
   show() {
-    stroke("red");
+    stroke('red');
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
   }
@@ -168,7 +173,7 @@ class Randomer extends Bullet {
     this.y += this.yspeed;
   }
   show() {
-    stroke("green");
+    stroke('green');
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
   }
@@ -193,7 +198,7 @@ class Accelerator extends Bullet {
     this.y += this.yspeed;
   }
   show() {
-    stroke("orange");
+    stroke('orange');
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
   }
@@ -220,7 +225,7 @@ class Plumber extends Bullet {
     }
   }
   show() {
-    stroke("red");
+    stroke('red');
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
   }
@@ -245,7 +250,7 @@ class Crosser extends Bullet {
     this.x += this.xspeed;
   }
   show() {
-    stroke("yellow");
+    stroke('yellow');
     strokeWeight(this.h);
     line(this.x, this.y, this.x + this.w, this.y);
   }

@@ -8,21 +8,22 @@ class Character {
     this.xspeed = 0;
     this.yspeed = CHARACTER_SPEED;
     this.lives = 1;
-    this.status = "normal";
+    this.energy = 0;
+    this.status = 'normal';
     this.isInvincible = false;
-    this.click2Move = 0
-    this.speechText = ''
+    this.click2Move = 0;
+    this.speechText = '';
   }
 
   update() {
     switch (this.status) {
-      case "slow":
+      case 'slow':
         this.y += this.yspeed * 0.5;
         this.x += this.xspeed;
         break;
       case 'stunned':
-        if (!this.click2Move) this.status = 'normal'
-        break
+        if (!this.click2Move) this.status = 'normal';
+        break;
       case 'sicked':
         this.x += this.xspeed;
         this.y += this.yspeed * random() * 2;
@@ -48,8 +49,7 @@ class Character {
     this.status = status;
     if (ms) {
       setTimeout(() => {
-        if (this.status === status)
-          this.status = "normal";
+        if (this.status === status) this.status = 'normal';
       }, ms);
     }
   }
@@ -60,64 +60,78 @@ class Character {
     }, ms);
   }
   setSpeech(s) {
-    if (this.speechText.length) return
-    this.speechText = s
+    if (this.speechText.length) return;
+    this.speechText = s;
     setTimeout(() => {
-      this.speechText = ''
+      this.speechText = '';
     }, 2000);
   }
   changeDirection() {
     switch (this.status) {
       case 'stunned':
-        this.click2Move -= 1
-        break
+        this.click2Move -= 1;
+        break;
       default:
         this.yspeed = -this.yspeed;
     }
   }
   speak() {
-    stroke(255)
-    strokeWeight(1)
-    textSize(15)
-    fill(255)
-    let statusText = this.textFromStatus()
-    if (statusText.length)
-      text(statusText, this.x + this.w, this.y - 10)
+    stroke(255);
+    strokeWeight(1);
+    textSize(15);
+    fill(255);
+    let statusText = this.textFromStatus();
+    if (statusText.length) text(statusText, this.x + this.w, this.y - 10);
     if (this.speechText.length)
-      text(this.speechText, this.x + this.w, this.y + 20)
+      text(this.speechText, this.x + this.w, this.y + 20);
   }
   textFromStatus() {
     switch (this.status) {
       case 'normal':
-        return ''
+        return '';
       case 'slow':
-        return 'so slow...'
+        return 'so slow...';
       case 'stunned':
-        return String(this.click2Move)
+        return String(this.click2Move);
       case 'sicked':
-        return 'Bluuuh!'
+        return 'Bluuuh!';
       case 'big':
-        return 'Mario!'
+        return 'Mario!';
       case 'small':
-        return 'Can you see me?'
+        return 'Can you see me?';
       case 'fast':
-        return 'too fast!!!'
+        return 'too fast!!!';
       case 'good':
-        return 'yummy ^_^'
+        return 'yummy ^_^';
       case 'lucky':
-        return 'not even close'
+        return 'not even close';
       case 'dead':
-        return 'Oh no!'
+        return 'Oh no!';
       default:
-        return 'something wrong..'
+        return 'something wrong..';
     }
+  }
+  addEnergy() {
+    if (this.energy === 2) {
+      this.ultimate();
+    } else {
+      this.setSpeech('Add energy...');
+      this.energy += 1;
+    }
+  }
+  ultimate() {
+    this.setSpeech('Power Over 9k!');
+    this.energy = 0;
+    bullets.changeUpdate(function() {
+      this.x -= this.xspeed;
+    });
   }
   show() {
     if (this.isInvincible) {
       tint(255, 125);
       image(characterImg, this.x, this.y, this.w, this.h);
       tint(255, 255);
-      return
+      return;
     }
     image(characterImg, this.x, this.y, this.w, this.h);
   }
