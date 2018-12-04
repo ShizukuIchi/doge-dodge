@@ -13,6 +13,9 @@ class Character {
     this.isInvincible = false;
     this.click2Move = 0;
     this.speechText = '';
+    this.speechTimeout = 0
+    this.statusTimeout = 0
+    this.invisibleTimeout = 0
   }
 
   update() {
@@ -47,22 +50,24 @@ class Character {
   }
   setStatus(status, ms) {
     this.status = status;
+    clearTimeout(this.statusTimeout)
     if (ms) {
-      setTimeout(() => {
+      this.statusTimeout = setTimeout(() => {
         if (this.status === status) this.status = 'normal';
       }, ms);
     }
   }
   setInvincible(ms = 2000) {
     this.isInvincible = true;
-    setTimeout(() => {
+    clearTimeout(this.invisibleTimeout)
+    this.invisibleTimeout = setTimeout(() => {
       this.isInvincible = false;
     }, ms);
   }
   setSpeech(s) {
-    if (this.speechText.length) return;
     this.speechText = s;
-    setTimeout(() => {
+    clearTimeout(this.speechTimeout)
+    this.speechTimeout = setTimeout(() => {
       this.speechText = '';
     }, 2000);
   }
@@ -134,6 +139,11 @@ class Character {
       return;
     }
     image(characterImg, this.x, this.y, this.w, this.h);
+  }
+  clearTimers() {
+    clearTimeout(this.invisibleTimeout)
+    clearTimeout(this.statusTimeout)
+    clearTimeout(this.speechTimeout)
   }
 }
 

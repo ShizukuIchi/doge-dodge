@@ -137,6 +137,7 @@ function draw() {
     character.speak();
     if (character.status === 'dead') {
       drawGameOver();
+      character.clearTimers()
       fetch(`${location.href}score?score=${scoreCount}`);
       status = 'stopped';
       noLoop();
@@ -250,11 +251,13 @@ function mousePressed(e) {
       return;
   }
 }
-function mouseReleased() {
+function mouseReleased(e) {
   if (status !== 'started') return;
-  dispatch({
-    type: 'mouseup',
-  });
+  if(e.which === 1) {
+    dispatch({
+      type: 'mouseup',
+    });
+  }
 }
 window.oncontextmenu = () => false;
 function touchStarted() {
