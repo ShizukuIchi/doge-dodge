@@ -7,7 +7,7 @@ class Character {
     this.h = CHARACTER_HEIGHT;
     this.xspeed = 0;
     this.yspeed = CHARACTER_SPEED;
-    this.lives = 1;
+    this.lives = 2;
     this.energy = 0;
     this.status = 'normal';
     this.isInvincible = false;
@@ -30,7 +30,7 @@ class Character {
         break;
       case 'fast':
         this.x += this.xspeed;
-        this.y += this.yspeed * 2.3;
+        this.y += this.yspeed * 2.2;
         break;
       default:
         this.x += this.xspeed;
@@ -115,7 +115,7 @@ class Character {
     if (this.energy === 2) {
       this.ultimate();
     } else {
-      this.setSpeech('Add energy...');
+      this.setSpeech('Charging energy...');
       this.energy += 1;
     }
   }
@@ -133,6 +133,80 @@ class Character {
       tint(255, 255);
       return;
     }
+    image(characterImg, this.x, this.y, this.w, this.h);
+  }
+}
+
+class TutorialGuy {
+  constructor() {
+    this.x = 420;
+    this.y = 370;
+    this.w = 60;
+    this.h = 60;
+    this.xspeed = 0;
+    this.yspeed = 0;
+    this.item = null;
+    this.lock = false;
+    this.lives = 1;
+    this.phase = 'start';
+  }
+  async dodge() {
+    if (this.lock) return;
+    this.lock = true;
+    this.item = new Bullet(0, 0, 20, 20);
+    this.yspeed = -5;
+    this.item.x = 700;
+    this.item.y = 400;
+    this.item.xspeed = -12;
+    await this.sleep(700);
+    this.yspeed = 5;
+    await this.sleep(700);
+    this.y = 370;
+    this.yspeed = 0;
+    this.item = null;
+    this.lock = false;
+  }
+  sleep(ms) {
+    return new Promise(res => setTimeout(res, ms));
+  }
+  update() {
+    this.x += this.xspeed;
+    this.y += this.yspeed;
+  }
+  async heart() {
+    if (this.lock) return;
+    this.lock = true;
+    let item = new Life();
+    item.y = 400;
+    item.x = 700;
+    item.width = 40;
+    item.height = 40;
+    item.xspeed = -7;
+    item.yspeed = 0;
+    this.item = item;
+    await this.sleep(1200);
+    this.item = null;
+    this.lives += 1;
+    this.lock = false;
+  }
+
+  processItem() {
+    if (this.item) {
+      this.item.update();
+      this.item.show();
+    }
+  }
+  drawTips() {
+    drawTutorialPhase();
+    if (this.phase === 'end') {
+      drawTutorialEnd();
+    } else if (this.phase === 'start') {
+      drawTutorialStart();
+    } else {
+      drawNext();
+    }
+  }
+  show() {
     image(characterImg, this.x, this.y, this.w, this.h);
   }
 }

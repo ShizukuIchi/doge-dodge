@@ -1,4 +1,3 @@
-
 class Items {
   constructor() {
     this.items = [];
@@ -31,7 +30,7 @@ class Item {
     this.yspeed = ys || 0;
   }
   effect() {
-    console.log("item contact");
+    console.log('item contact');
   }
   update() {
     this.x += this.xspeed;
@@ -41,14 +40,14 @@ class Item {
 class Life extends Item {
   constructor(y = 0.5) {
     super();
-    this.y = height * y
+    this.y = height * y;
   }
   effect() {
     character.lives += 1;
-    character.setStatus('good', 2000)
+    character.setStatus('good', 2000);
   }
   show() {
-    fill("pink");
+    fill('pink');
     noStroke();
     ellipse(this.x, this.y, this.w);
   }
@@ -56,112 +55,112 @@ class Life extends Item {
 class Stun extends Item {
   constructor(y = 0.5) {
     super();
-    this.y = height * y
+    this.y = height * y;
   }
   effect() {
-    character.status = 'stunned'
-    character.click2Move = 5
+    character.status = 'stunned';
+    character.click2Move = 5;
   }
   show() {
     noStroke();
-    fill("purple");
+    fill('purple');
     ellipse(this.x, this.y, this.w);
   }
 }
 
 class Unknown extends Item {
   constructor(y = 0.5) {
-    super()
-    this.y = height * y
+    super();
+    this.y = height * y;
   }
   effect() {
-    itemTypes.pick().prototype.effect()
+    itemTypes.pick().prototype.effect();
   }
   show() {
-    stroke(255)
-    strokeWeight(2)
-    textSize(25)
-    fill(255)
-    text('?', this.x - 6, this.y - 20)
-    noFill()
+    stroke(255);
+    strokeWeight(2);
+    textSize(25);
+    fill(255);
+    text('?', this.x - 6, this.y - 20);
+    noFill();
     ellipse(this.x, this.y, this.w);
   }
 }
 class Sick extends Item {
   constructor(y = 0.5) {
     super();
-    this.y = height * y
+    this.y = height * y;
   }
   effect() {
-    character.setStatus('sicked', 5000)
+    character.setStatus('sicked', 5000);
   }
   show() {
     noStroke();
-    fill("green");
+    fill('green');
     ellipse(this.x, this.y, this.w);
   }
 }
 class Fast extends Item {
   constructor(y = 0.5) {
     super();
-    this.y = height * y
+    this.y = height * y;
   }
   effect() {
-    character.setStatus('fast', 5000)
+    character.setStatus('fast', 5000);
   }
   show() {
     noStroke();
-    fill("orange");
+    fill('orange');
     ellipse(this.x, this.y, this.w);
   }
 }
 class Grow extends Item {
   constructor(y = 0.5) {
     super();
-    this.y = height * y
+    this.y = height * y;
   }
   effect() {
-    character.h = CHARACTER_HEIGHT + 8
-    character.w = CHARACTER_WIDTH + 8
-    character.x -= 4
-    character.y -= 4
+    character.h = CHARACTER_HEIGHT + 12;
+    character.w = CHARACTER_WIDTH + 12;
+    character.x -= 6;
+    character.y -= 6;
     setTimeout(() => {
-      character.w = CHARACTER_WIDTH
-      character.h = CHARACTER_HEIGHT
-      character.x += 4
-      character.y += 4
-    }, 5000)
-    character.setStatus('big', 5000)
+      character.w = CHARACTER_WIDTH;
+      character.h = CHARACTER_HEIGHT;
+      character.x += 6;
+      character.y += 6;
+    }, 5000);
+    character.setStatus('big', 5000);
   }
   show() {
     noStroke();
-    fill("brown");
+    fill('brown');
     ellipse(this.x, this.y, this.w);
   }
 }
 class Shrink extends Item {
   constructor(y = 0.5) {
     super();
-    this.y = height * y
+    this.y = height * y;
   }
   effect() {
-    character.h = CHARACTER_HEIGHT - 16
-    character.w = CHARACTER_WIDTH - 16
-    character.x += 8
-    character.y += 8
+    character.h = CHARACTER_HEIGHT - 16;
+    character.w = CHARACTER_WIDTH - 16;
+    character.x += 8;
+    character.y += 8;
     setTimeout(() => {
-      character.w = CHARACTER_WIDTH
-      character.h = CHARACTER_HEIGHT
-      character.x -= 8
-      character.y -= 8
-    }, 5000)
-    character.setStatus('small', 5000)
+      character.w = CHARACTER_WIDTH;
+      character.h = CHARACTER_HEIGHT;
+      character.x -= 8;
+      character.y -= 8;
+    }, 5000);
+    character.setStatus('small', 5000);
   }
   show() {
     noStroke();
-    fill("burlywood");
+    fill('burlywood');
     ellipse(this.x, this.y, this.w);
   }
 }
 
-const itemTypes = [Life, Stun, Sick, Unknown, Fast, Grow, Shrink] 
+const itemTypes = [Life, Stun, Sick, Unknown, Fast, Grow, Shrink];

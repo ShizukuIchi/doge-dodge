@@ -75,7 +75,11 @@ function setup() {
   textFont(font);
   textAlign(CENTER, CENTER);
   textSize(80);
-  text('控制（左鍵）\n開始（空白鍵）', width * 0.5 + 40, height * 0.5);
+  text(
+    '控制（滑鼠）\n開始（空白鍵）\n教學（Ｔ）',
+    width * 0.5 + 30,
+    height * 0.5,
+  );
   textAlign(LEFT, TOP);
   textSize(20);
   map = mapChanger(1000);
@@ -139,6 +143,17 @@ function draw() {
     } else {
       scoreCount += 1;
     }
+  } else if (status === 'tutorial') {
+    background(...mapColor);
+    character.update();
+    character.show();
+    character.processItem();
+    character.drawTips();
+    drawScore();
+    if (character.phase === 'end') {
+      status = 'stopped';
+      noLoop();
+    }
   }
 }
 
@@ -159,17 +174,11 @@ function addBarrages() {
   }
 }
 function addItems() {
-  if (!scoreCount) {
-    dispatch({
-      type: 'addItem',
-      item: new Life(),
-    });
-    return;
-  }
+  if (!scoreCount) return;
   if (scoreCount % 750 === 0) {
     dispatch({
       type: 'addItem',
-      item: new (itemTypes.pick())(0.2),
+      item: new (itemTypes.pick())(0.15),
     });
     dispatch({
       type: 'addItem',
@@ -177,7 +186,7 @@ function addItems() {
     });
     dispatch({
       type: 'addItem',
-      item: new (itemTypes.pick())(0.8),
+      item: new (itemTypes.pick())(0.9),
     });
   }
 }
@@ -211,6 +220,11 @@ function keyPressed() {
         reset();
       }
       break;
+    case 't':
+      if (status === 'stopped') {
+        tutorial();
+      }
+      break;
     case 'p':
       pause();
       break;
@@ -222,7 +236,7 @@ function mouseClicked(e) {
   }
 }
 function mousePressed(e) {
-  if (status !== 'started') return;
+  if (status !== 'started' || e.target.className !== 'p5Canvas') return;
   switch (e.which) {
     case 3:
       character.setSpeech(document.querySelector('#taunt').value);
