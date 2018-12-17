@@ -13,9 +13,9 @@ class Character {
     this.isInvincible = false;
     this.click2Move = 0;
     this.speechText = '';
-    this.speechTimeout = 0
-    this.statusTimeout = 0
-    this.invisibleTimeout = 0
+    this.speechTimeout = 0;
+    this.statusTimeout = 0;
+    this.invisibleTimeout = 0;
   }
 
   update() {
@@ -50,7 +50,7 @@ class Character {
   }
   setStatus(status, ms) {
     this.status = status;
-    clearTimeout(this.statusTimeout)
+    clearTimeout(this.statusTimeout);
     if (ms) {
       this.statusTimeout = setTimeout(() => {
         if (this.status === status) this.status = 'normal';
@@ -59,14 +59,14 @@ class Character {
   }
   setInvincible(ms = 2000) {
     this.isInvincible = true;
-    clearTimeout(this.invisibleTimeout)
+    clearTimeout(this.invisibleTimeout);
     this.invisibleTimeout = setTimeout(() => {
       this.isInvincible = false;
     }, ms);
   }
   setSpeech(s) {
     this.speechText = s;
-    clearTimeout(this.speechTimeout)
+    clearTimeout(this.speechTimeout);
     this.speechTimeout = setTimeout(() => {
       this.speechText = '';
     }, 2000);
@@ -120,8 +120,8 @@ class Character {
     if (this.energy === 2) {
       this.ultimate();
     } else {
-      this.setSpeech('Charging energy...');
       this.energy += 1;
+      this.setSpeech(`Charging energy (${this.energy})`);
     }
   }
   ultimate() {
@@ -141,9 +141,9 @@ class Character {
     image(characterImg, this.x, this.y, this.w, this.h);
   }
   clearTimers() {
-    clearTimeout(this.invisibleTimeout)
-    clearTimeout(this.statusTimeout)
-    clearTimeout(this.speechTimeout)
+    clearTimeout(this.invisibleTimeout);
+    clearTimeout(this.statusTimeout);
+    clearTimeout(this.speechTimeout);
   }
 }
 
