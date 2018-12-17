@@ -142,6 +142,16 @@ body {
   margin-bottom: 8px;
   display: flex;
 }
+.difficulty {
+  margin-right: 15px;
+  color: rgb(210, 210, 210);
+  cursor: not-allowed;
+}
+.difficulty.active {
+  color: black;
+  cursor: pointer;
+}
+
 .menu .ball {
   width: 20px;
   height: 20px;

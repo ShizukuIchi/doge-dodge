@@ -82,7 +82,6 @@ function setup() {
   );
   textAlign(LEFT, TOP);
   textSize(20);
-  map = mapChanger(1000);
   Array.prototype.pick = function() {
     return this[Math.floor(random(0, this.length))];
   };
@@ -101,6 +100,7 @@ function reset() {
   framesEveryBullet = INIT_FRAMES_EVERY_BULLET;
   bulletMaxSpeed = INIT_BULLET_MAX_SPEED;
   bulletMinSpeed = INIT_BULLET_MIN_SPEED;
+  map = mapChanger(1000);
   loop();
 }
 
@@ -137,7 +137,7 @@ function draw() {
     character.speak();
     if (character.status === 'dead') {
       drawGameOver();
-      character.clearTimers()
+      character.clearTimers();
       fetch(`${location.href}score?score=${scoreCount}`);
       status = 'stopped';
       noLoop();
@@ -253,7 +253,7 @@ function mousePressed(e) {
 }
 function mouseReleased(e) {
   if (status !== 'started') return;
-  if(e.which === 1) {
+  if (e.which === 1) {
     dispatch({
       type: 'mouseup',
     });
