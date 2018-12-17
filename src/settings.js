@@ -1,7 +1,12 @@
 let menuVisibility = false;
-const menu = document.querySelector('#menu');
+let difficulty = 1;
 
-document.querySelector('#settings').onclick = () => {
+const menu = document.querySelector('#menu');
+const settings = document.querySelector('#settings');
+const sound = document.querySelector('#sound');
+const difficultyOption = document.querySelector('#difficulties');
+
+settings.onclick = () => {
   menu.classList.toggle('menu-active');
 };
 
@@ -11,7 +16,7 @@ menu.onclick = e => {
   }
 };
 
-document.querySelector('#sound').onclick = e => {
+sound.onclick = e => {
   if (!e.target.checked) {
     try {
       bgm.setVolume(0);
@@ -25,4 +30,11 @@ document.querySelector('#sound').onclick = e => {
       e.target.checked = false;
     }
   }
+};
+
+difficultyOption.onclick = e => {
+  const target = e.target.closest('.difficulty');
+  if (!target) return;
+  const clickedDifficulty = target.dataset.value;
+  console.log(clickedDifficulty);
 };
