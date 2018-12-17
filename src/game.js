@@ -140,6 +140,7 @@ function draw() {
       character.clearTimers();
       fetch(`${location.href}score?score=${scoreCount}`);
       status = 'stopped';
+      difficulty.openLevelTo(Math.ceil(scoreCount / 1000));
       noLoop();
     } else {
       scoreCount += 1;
@@ -165,8 +166,12 @@ function addBarrages() {
   if (!scoreCount) return;
   if (scoreCount % 250 === 0) {
     let barrage = barrageTypes.pick();
-    let arg = barrage.arguments.pick();
-    let stopTill = barrage.stopTill.pick();
+    const level = difficulty.getLevel() - 1;
+    let arg =
+      barrage.arguments[level] ||
+      barrage.arguments[barrage.arguments.length - 1];
+    let stopTill =
+      barrage.stopTill[level] || barrage.stopTill[barrage.stopTill.length - 1];
     dispatch({
       type: 'add',
       barrage: barrage.fn(arg),

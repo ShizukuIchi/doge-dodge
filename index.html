@@ -37,23 +37,18 @@
         <div class="item">空白鍵：開始遊戲</div>
         <div class="item">滑鼠左鍵：控制主角</div>
         <div class="item">左鍵長按：大絕充能</div>      
-      </div>
-      <div class="item">
-        右鍵挑釁：<input type="text" name="taunt" id="taunt" value="再來啊！">
+        <div class="item long">
+          右鍵挑釁：<input type="text" name="taunt" id="taunt" value="再來啊！">
+        </div>
       </div>
       <div class="sep"></div>
       <div class="item">遊戲難度</div>
       <div id="difficulties" class="item">
-        <div class="difficulty active" data-value="1">1</div>
-        <div class="difficulty" data-value="2">2</div>
-        <div class="difficulty" data-value="3">3</div>
-        <div class="difficulty" data-value="4">4</div>
-        <div class="difficulty" data-value="5">5</div>
-        <div class="difficulty" data-value="6">6</div>
-        <div class="difficulty" data-value="7">7</div>
-        <div class="difficulty" data-value="8">8</div>
-        <div class="difficulty" data-value="9">9</div>
-        <div class="difficulty" data-value="10">∞</div>
+        <div class="difficulty active available" data-level="1">1</div>
+        <div class="difficulty" data-level="2">2</div>
+        <div class="difficulty" data-level="3">3</div>
+        <div class="difficulty" data-level="4">4</div>
+        <div class="difficulty" data-level="5">∞</div>
       </div>      
     </div>
   </div>
@@ -67,6 +62,7 @@
   <script src="observer.js"></script>
   <script src="character.js"></script>
   <script src='game.js'></script>
+  <script src="difficulty.js"></script>
   <script src="settings.js"></script>
 </body>
 

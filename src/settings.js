@@ -1,10 +1,10 @@
 let menuVisibility = false;
-let difficulty = 1;
 
 const menu = document.querySelector('#menu');
 const settings = document.querySelector('#settings');
 const sound = document.querySelector('#sound');
 const difficultyOption = document.querySelector('#difficulties');
+const difficulty = new Difficulty(difficultyOption);
 
 settings.onclick = () => {
   menu.classList.toggle('menu-active');
@@ -35,6 +35,5 @@ sound.onclick = e => {
 difficultyOption.onclick = e => {
   const target = e.target.closest('.difficulty');
   if (!target) return;
-  const clickedDifficulty = target.dataset.value;
-  console.log(clickedDifficulty);
+  difficulty.setDifficulty(target.dataset.level);
 };
