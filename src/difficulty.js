@@ -29,6 +29,24 @@ const initDifficultyData = [
     difficultyLevel: '5',
     displayLevel: '∞',
   },
+  {
+    active: false,
+    available: false,
+    difficultyLevel: '6',
+    displayLevel: '6',
+  },
+  {
+    active: false,
+    available: false,
+    difficultyLevel: '7',
+    displayLevel: '7',
+  },
+  {
+    active: false,
+    available: false,
+    difficultyLevel: '8',
+    displayLevel: '∞',
+  },
 ];
 
 class Difficulty {
@@ -63,7 +81,7 @@ class Difficulty {
   getLevel() {
     return this.data.find(d => d.active).difficultyLevel;
   }
-  getDisplayLevel(level) {
+  getDisplayLevel() {
     return this.data.find(d => d.active).displayLevel;
   }
   openLevelTo(level) {
