@@ -18,6 +18,7 @@ let game;
 let map;
 let mapColor;
 let items;
+let level;
 
 // game configuration
 const INIT_BULLET_SPEED_RATE = 1;
@@ -101,6 +102,7 @@ function reset() {
   bulletMaxSpeed = INIT_BULLET_MAX_SPEED;
   bulletMinSpeed = INIT_BULLET_MIN_SPEED;
   map = mapChanger(1000);
+  level = difficulty.getLevel();
   loop();
 }
 
@@ -122,6 +124,7 @@ function draw() {
     addBarrages();
     addItems();
     drawScore();
+    drawLevel();
     map();
     bullets.showNext();
     items.showNext();
@@ -140,7 +143,7 @@ function draw() {
       character.clearTimers();
       fetch(`${location.href}score?score=${scoreCount}`);
       status = 'stopped';
-      difficulty.openLevelTo(Math.ceil(scoreCount / 1000));
+      if (difficulty.openLevelTo(Math.ceil(scoreCount / 1000))) drawNewLevel();
       noLoop();
     } else {
       scoreCount += 1;
@@ -166,12 +169,12 @@ function addBarrages() {
   if (!scoreCount) return;
   if (scoreCount % 250 === 0) {
     let barrage = barrageTypes.pick();
-    const level = difficulty.getLevel() - 1;
     let arg =
-      barrage.arguments[level] ||
+      barrage.arguments[level - 1] ||
       barrage.arguments[barrage.arguments.length - 1];
     let stopTill =
-      barrage.stopTill[level] || barrage.stopTill[barrage.stopTill.length - 1];
+      barrage.stopTill[level - 1] ||
+      barrage.stopTill[barrage.stopTill.length - 1];
     dispatch({
       type: 'add',
       barrage: barrage.fn(arg),
@@ -295,6 +298,16 @@ function drawScore() {
   setupText();
   text(`分數：${scoreCount}`, 5, 0);
   text(`生命：${remainsLivesString()}`, 5, 25);
+}
+function drawLevel() {
+  setupText();
+  textAlign(RIGHT, TOP);
+  text(`難度：${difficulty.getDisplayLevel()}`, width - 5, 0);
+}
+function drawNewLevel() {
+  setupText();
+  textAlign(RIGHT, TOP);
+  text(`新難度已解鎖！`, width - 5, 25);
 }
 function drawPause() {
   setupText();

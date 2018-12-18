@@ -34,6 +34,6 @@ sound.onclick = e => {
 
 difficultyOption.onclick = e => {
   const target = e.target.closest('.difficulty');
-  if (!target) return;
+  if (!target || status !== 'stopped') return;
   difficulty.setDifficulty(target.dataset.level);
 };

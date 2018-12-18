@@ -61,19 +61,25 @@ class Difficulty {
     this.render();
   }
   getLevel() {
-    return this.data.filter(d => d.active)[0].difficultyLevel;
+    return this.data.find(d => d.active).difficultyLevel;
+  }
+  getDisplayLevel(level) {
+    return this.data.find(d => d.active).displayLevel;
   }
   openLevelTo(level) {
-    if (Number(this.levelOpened) > Number(level)) {
+    let changed = false;
+    if (Number(this.levelOpened) >= Number(level)) {
       level = this.levelOpened;
     } else {
       this.levelOpened = level;
+      changed = true;
     }
     this.data = this.data.map(d => {
       d.available = Number(d.difficultyLevel) <= Number(level);
       return d;
     });
     this.render();
+    return changed;
   }
   log() {
     console.table(this.data);
