@@ -53,6 +53,8 @@ body {
 }
 
 #game {
+  user-select: none;
+  -webkit-user-select: none;
   position: relative;
   opacity: 0;
   animation: fade-in 0.5s forwards;

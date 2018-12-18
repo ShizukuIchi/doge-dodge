@@ -85,6 +85,7 @@ class Character {
     strokeWeight(1);
     textSize(15);
     fill(255);
+    textAlign(LEFT, TOP);
     let statusText = this.textFromStatus();
     if (statusText.length) text(statusText, this.x + this.w, this.y - 10);
     if (this.speechText.length)

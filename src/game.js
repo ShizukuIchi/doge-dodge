@@ -269,12 +269,24 @@ function mouseReleased(e) {
 }
 window.oncontextmenu = () => false;
 function touchStarted() {
-  if (screen.width >= 768) return;
   if (status === 'started') {
-    character.changeDirection();
+    if (touches.length > 1) {
+      character.setSpeech(document.querySelector('#taunt').value);
+    } else {
+      character.changeDirection();
+      dispatch({
+        type: 'mousedown',
+      });
+    }
   } else {
     reset();
   }
+}
+function touchEnded() {
+  if (touches > 1) return;
+  dispatch({
+    type: 'mouseup',
+  });
 }
 
 function remainsLivesString() {
