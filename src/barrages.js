@@ -64,11 +64,11 @@ function bigChase(rate) {
   bullets.add(new FastAimer(rate));
 }
 
-function genSlowChaser() {
-  return slowChaser;
+function genSlowChaser(rate) {
+  return slowChaser.bind(null, rate);
 }
-function slowChaser() {
-  bullets.add(new SlowChaser());
+function slowChaser(rate) {
+  bullets.add(new SlowChaser(rate));
 }
 
 function genWave(h, slope = 45) {
@@ -145,52 +145,52 @@ function crosser() {
 const barrageTypes = [
   {
     fn: genOneHole,
-    arguments: [150],
-    stopTill: [1]
+    arguments: [170, 160, 150, 130, 80],
+    stopTill: [1],
   },
   {
     fn: genWave,
-    arguments: [200, 190, 180],
-    stopTill: [130, 140, 150]
+    arguments: [200, 200, 200, 180, 150],
+    stopTill: [100, 120, 140, 160, 180],
   },
   {
     fn: genStopper,
-    arguments: [120, 135, 150],
-    stopTill: [3, 4]
+    arguments: [120, 120, 120, 135, 150],
+    stopTill: [3, 4, 5, 6, 7],
   },
   {
     fn: genBigChase,
-    arguments: [2.1, 2.3, 2.5],
-    stopTill: [1]
+    arguments: [2.1, 2.3, 2.5, 2.7, 3],
+    stopTill: [1],
   },
   {
     fn: genSlowChaser,
-    arguments: [0],
-    stopTill: [1]
+    arguments: [0.7, 0.75, 0.8, 0.83, 0.87],
+    stopTill: [1],
   },
   {
     fn: genVanisher,
     arguments: [0],
-    stopTill: [5, 6, 7]
+    stopTill: [3, 4, 5, 7, 10],
   },
   {
     fn: genAccelerator,
-    arguments: [2],
-    stopTill: [5, 6, 7]
+    arguments: [2, 2, 2, 3, 4],
+    stopTill: [3, 4, 5, 7, 10],
   },
   {
     fn: genRandomer,
-    arguments: [0.6, 0.5, 0.45],
-    stopTill: [5, 6, 7]
+    arguments: [0.6, 0.6, 0.5, 0.4, 0.3],
+    stopTill: [3, 4, 5, 7, 10],
   },
   {
     fn: genPlumber,
-    arguments: [0.33],
-    stopTill: [1]
+    arguments: [0.2, 0.225, 0.25, 0.3, 0.4],
+    stopTill: [1],
   },
   {
     fn: genCrosser,
     arguments: [0],
-    stopTill: [5]
-  }
+    stopTill: [3, 4, 5, 7, 10],
+  },
 ];

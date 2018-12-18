@@ -84,12 +84,12 @@ class FastAimer extends Bullet {
 }
 
 class SlowChaser extends Bullet {
-  constructor() {
+  constructor(rate) {
     super();
     this.w = BULLET_WIDTH + 2;
     this.h = BULLET_HEIGHT + 2;
     this.y = height / 2;
-    this.xspeed = this.xspeed * 0.8;
+    this.xspeed = this.xspeed * (rate || 0.8);
     this.yspeed = Math.abs(character.yspeed * 0.65);
   }
 
