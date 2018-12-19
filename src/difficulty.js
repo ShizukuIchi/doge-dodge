@@ -27,7 +27,7 @@ const initDifficultyData = [
     active: false,
     available: false,
     difficultyLevel: '5',
-    displayLevel: '∞',
+    displayLevel: '5',
   },
   {
     active: false,
@@ -54,6 +54,15 @@ class Difficulty {
     this.data = [...initDifficultyData];
     this.entry = entry;
     this.levelOpened = '1';
+  }
+  setListener() {
+    const difficultyOptions = this.entry.querySelectorAll('.difficulty');
+    Array.from(difficultyOptions).forEach(
+      d =>
+        (d.onclick = e => {
+          difficulty.setDifficulty(e.target.dataset.level);
+        }),
+    );
   }
   setDifficulty(level) {
     const d = this.data.filter(d => d.difficultyLevel === level)[0];
@@ -113,5 +122,6 @@ class Difficulty {
         }</div>`;
       })
       .join('');
+    this.setListener();
   }
 }

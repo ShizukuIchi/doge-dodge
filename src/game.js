@@ -268,7 +268,7 @@ function mouseReleased(e) {
   }
 }
 window.oncontextmenu = () => false;
-function touchStarted() {
+function touchStarted(e) {
   if (status === 'started') {
     if (touches.length > 1) {
       character.setSpeech(document.querySelector('#taunt').value);
@@ -278,7 +278,7 @@ function touchStarted() {
         type: 'mousedown',
       });
     }
-  } else {
+  } else if (e.target.className === 'p5Canvas') {
     reset();
   }
 }

@@ -7,6 +7,7 @@ const difficultyOption = document.querySelector('#difficulties');
 const difficulty = new Difficulty(difficultyOption);
 
 settings.onclick = () => {
+  if (status !== 'stopped') return;
   menu.classList.toggle('menu-active');
 };
 
@@ -30,10 +31,4 @@ sound.onclick = e => {
       e.target.checked = false;
     }
   }
-};
-
-difficultyOption.onclick = e => {
-  const target = e.target.closest('.difficulty');
-  if (!target || status !== 'stopped') return;
-  difficulty.setDifficulty(target.dataset.level);
 };
