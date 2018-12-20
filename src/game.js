@@ -141,9 +141,19 @@ function draw() {
     if (character.status === 'dead') {
       drawGameOver();
       character.clearTimers();
-      fetch(`${location.href}score?score=${scoreCount}`);
+      fetch(`${location.href}score?score=${scoreCount}&level=${level}`);
       status = 'stopped';
-      if (difficulty.openLevelTo(Math.ceil(scoreCount / 1000))) drawNewLevel();
+      if (level === '1') {
+        if (scoreCount >= 1500) {
+          difficulty.openLevelTo(2);
+          drawNewLevel();
+        }
+      } else if (level !== '8') {
+        if (scoreCount >= 2500) {
+          difficulty.openLevelTo(Number(level) + 1);
+          drawNewLevel();
+        }
+      }
       noLoop();
     } else {
       scoreCount += 1;
@@ -184,19 +194,8 @@ function addBarrages() {
 }
 function addItems() {
   if (!scoreCount) return;
-  if (scoreCount % 750 === 0) {
-    dispatch({
-      type: 'addItem',
-      item: new (itemTypes.pick())(0.15),
-    });
-    dispatch({
-      type: 'addItem',
-      item: new (itemTypes.pick())(0.5),
-    });
-    dispatch({
-      type: 'addItem',
-      item: new (itemTypes.pick())(0.9),
-    });
+  if (scoreCount % 200 === 0) {
+    itemsGeneratorFor(level)();
   }
 }
 function mapChanger(interval) {
@@ -205,7 +204,7 @@ function mapChanger(interval) {
   return function() {
     if (scoreCount && scoreCount % interval === 0) {
       addSpeedHint.play();
-      mapPlugin = mapPlugins[floor(random(0, mapPlugins.length))];
+      mapPlugin = mapPlugins.pick();
       timer = setTimeout(() => {
         if (status === 'started' && scoreCount > interval) changeMap(mapPlugin);
         else clearTimeout(timer);

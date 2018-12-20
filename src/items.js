@@ -40,7 +40,7 @@ class Item {
 class Life extends Item {
   constructor(y = 0.5) {
     super();
-    this.y = height * y;
+    this.y = height * y - this.h / 2;
   }
   effect() {
     character.lives += 1;
@@ -55,7 +55,7 @@ class Life extends Item {
 class Stun extends Item {
   constructor(y = 0.5) {
     super();
-    this.y = height * y;
+    this.y = height * y - this.h / 2;
   }
   effect() {
     character.status = 'stunned';
@@ -71,17 +71,18 @@ class Stun extends Item {
 class Unknown extends Item {
   constructor(y = 0.5) {
     super();
-    this.y = height * y;
+    this.y = height * y - this.h / 2;
   }
   effect() {
-    itemTypes.pick().prototype.effect();
+    // itemTypes.pick().prototype.effect();
   }
   show() {
     stroke(255);
     strokeWeight(2);
+    textAlign(CENTER, CENTER);
     textSize(25);
     fill(255);
-    text('?', this.x - 6, this.y - 20);
+    text('?', this.x, this.y - 6);
     noFill();
     ellipse(this.x, this.y, this.w);
   }
@@ -89,7 +90,7 @@ class Unknown extends Item {
 class Sick extends Item {
   constructor(y = 0.5) {
     super();
-    this.y = height * y;
+    this.y = height * y - this.h / 2;
   }
   effect() {
     character.setStatus('sicked', 5000);
@@ -103,7 +104,7 @@ class Sick extends Item {
 class Fast extends Item {
   constructor(y = 0.5) {
     super();
-    this.y = height * y;
+    this.y = height * y - this.h / 2;
   }
   effect() {
     character.setStatus('fast', 5000);
@@ -117,7 +118,7 @@ class Fast extends Item {
 class Grow extends Item {
   constructor(y = 0.5) {
     super();
-    this.y = height * y;
+    this.y = height * y - this.h / 2;
   }
   effect() {
     character.h = CHARACTER_HEIGHT + 12;
@@ -141,7 +142,7 @@ class Grow extends Item {
 class Shrink extends Item {
   constructor(y = 0.5) {
     super();
-    this.y = height * y;
+    this.y = height * y - this.h / 2;
   }
   effect() {
     character.h = CHARACTER_HEIGHT - 16;
@@ -164,3 +165,42 @@ class Shrink extends Item {
 }
 
 const itemTypes = [Life, Stun, Sick, Unknown, Fast, Grow, Shrink];
+function itemsGeneratorFor(level) {
+  const levelItemSettings = [
+    {
+      amount: 3,
+      types: [Life, Shrink],
+    },
+    {
+      amount: 4,
+      types: [Life, Life, Shrink, Grow],
+    },
+    {
+      amount: 5,
+      types: [Life, Shrink, Grow, Fast, Sick],
+    },
+    {
+      amount: 7,
+      types: [Life, Shrink, Grow, Fast, Sick, Unknown],
+    },
+    {
+      amount: 10,
+      types: [Life, Unknown, Unknown, Unknown, Unknown, Unknown],
+    },
+  ];
+  return function() {
+    const itemSettings =
+      levelItemSettings[Number(level) - 1] ||
+      levelItemSettings[levelItemSettings.length - 1];
+    Array(itemSettings.amount)
+      .fill()
+      .forEach((_, index) => {
+        dispatch({
+          type: 'addItem',
+          item: new (itemSettings.types.pick())(
+            (1 / (itemSettings.amount + 1)) * (index + 1),
+          ),
+        });
+      });
+  };
+}
