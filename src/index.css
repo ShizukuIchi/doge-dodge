@@ -200,6 +200,25 @@ body {
   background: #000;
 }
 
+.github {
+  position: fixed;
+  right: 0;
+  top: 0;
+  border-right: 40px white solid;
+  border-top: 40px white solid;
+  border-bottom: 40px transparent solid;
+  border-left: 40px transparent solid;
+}
+.github-logo {
+  position: fixed;
+  cursor: pointer;
+  right: 8px;
+  top: 8px;
+  width: 30px;
+  height: 30px;
+  transform: rotate(45deg);
+}
+
 @keyframes turnZ1 {
   from {
     transform: rotateZ(0deg);
