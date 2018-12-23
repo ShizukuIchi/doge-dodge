@@ -194,7 +194,20 @@ function addBarrages() {
 }
 function addItems() {
   if (!scoreCount) return;
-  if (scoreCount % 750 === 0) {
+  let intervel;
+  switch(Number(level)) {
+    case 1:
+    case 2:
+    case 3:
+      interval = 750;
+      break;
+    case 4:
+      interval = 700;
+      break
+    default:
+      interval = 600;
+  }
+  if (scoreCount % interval === 0) {
     itemsGeneratorFor(level)();
   }
 }

@@ -74,7 +74,7 @@ class Unknown extends Item {
     this.y = height * y - this.h / 2;
   }
   effect() {
-    // itemTypes.pick().prototype.effect();
+    itemTypes.pick().prototype.effect();
   }
   show() {
     stroke(255);
@@ -164,7 +164,7 @@ class Shrink extends Item {
   }
 }
 
-const itemTypes = [Life, Stun, Sick, Unknown, Fast, Grow, Shrink];
+const itemTypes = [Life, Stun, Sick, Fast, Grow, Shrink];
 function itemsGeneratorFor(level) {
   const levelItemSettings = [
     {
@@ -172,20 +172,20 @@ function itemsGeneratorFor(level) {
       types: [Life, Shrink],
     },
     {
-      amount: 4,
-      types: [Life, Life, Shrink, Grow],
+      amount: 3,
+      types: [Life, ...Array(2).fill(Fast), ...Array(5).fill(Grow), ...Array(5).fill(Shrink)],
     },
     {
       amount: 5,
-      types: [Life, Shrink, Grow, Fast, Sick],
+      types: [Life, ...Array(3).fill(Stun), ...Array(3).fill(Sick), ...Array(3).fill(Fast), ...Array(3).fill(Grow), ...Array(3).fill(Shrink), ... Array(3).fill(Unknown)],
     },
     {
       amount: 7,
-      types: [Life, Shrink, Grow, Fast, Sick, Unknown],
+      types: [Life, ...Array(5).fill(Stun), ...Array(4).fill(Sick), ...Array(4).fill(Fast), ...Array(4).fill(Grow), ...Array(4).fill(Shrink), ... Array(4).fill(Unknown) ],
     },
     {
       amount: 10,
-      types: [Life, Unknown, Unknown, Unknown, Unknown, Unknown],
+      types: [...Array(3).fill(Stun), ...Array(3).fill(Sick), ...Array(3).fill(Fast), Unknown],
     },
   ];
   return function() {
