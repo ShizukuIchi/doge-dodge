@@ -194,7 +194,7 @@ function addBarrages() {
 }
 function addItems() {
   if (!scoreCount) return;
-  if (scoreCount % 200 === 0) {
+  if (scoreCount % 750 === 0) {
     itemsGeneratorFor(level)();
   }
 }
