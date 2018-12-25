@@ -16,6 +16,7 @@ class Character {
     this.speechTimeout = 0;
     this.statusTimeout = 0;
     this.invisibleTimeout = 0;
+    this.coolDown = false;
   }
 
   update() {
