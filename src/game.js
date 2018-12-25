@@ -143,6 +143,7 @@ function draw() {
       character.clearTimers();
       fetch(`${location.href}score?score=${scoreCount}&level=${level}`);
       status = 'stopped';
+      dispatch({ type: 'mouseup' });
       if (level === '1') {
         if (scoreCount >= 1500) {
           difficulty.openLevelTo(2);
@@ -194,8 +195,7 @@ function addBarrages() {
 }
 function addItems() {
   if (!scoreCount) return;
-  let intervel;
-  switch(Number(level)) {
+  switch (Number(level)) {
     case 1:
     case 2:
     case 3:
@@ -203,7 +203,7 @@ function addItems() {
       break;
     case 4:
       interval = 700;
-      break
+      break;
     default:
       interval = 600;
   }

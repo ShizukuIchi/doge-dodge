@@ -119,6 +119,7 @@ class Character {
     }
   }
   addEnergy() {
+    if (this.coolDown) this.setSpeech('Ultimate cool down...');
     if (this.energy === 2) {
       this.ultimate();
     } else {
@@ -129,6 +130,12 @@ class Character {
   ultimate() {
     this.setSpeech('Power Over 9k!');
     this.energy = 0;
+    this.coolDown = true;
+    setTimeout(() => {
+      try {
+        this.coolDown = false;
+      } catch {}
+    }, 10000);
     bullets.changeUpdate(function() {
       this.x -= this.xspeed;
     });
